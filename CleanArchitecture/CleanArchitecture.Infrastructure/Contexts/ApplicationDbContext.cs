@@ -24,6 +24,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -43,6 +44,13 @@ namespace CleanArchitecture.Infrastructure.Contexts
             }
             return base.SaveChangesAsync(cancellationToken);
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=YOUR_SERVER;Database=YOUR_DATABASE;Trusted_Connection=True;");
+            }
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -60,7 +68,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
                 entity.ToTable("UserRoles");
             });
 
-            builder.Entity<IdentityUserClaim<string>>(entity =>
+            builder.Entity<IdentityUserClaim<string>>(entity =>  
             {
                 entity.ToTable("UserClaims");
             });
