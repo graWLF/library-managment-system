@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Internal;
 using CleanArchitecture.Core.Behaviours;
+using CleanArchitecture.Core.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ namespace CleanArchitecture.Core
             services.AddAutoMapper(cfg => cfg.Internal().MethodMappingEnabled = false, Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            
         }
     }
 }

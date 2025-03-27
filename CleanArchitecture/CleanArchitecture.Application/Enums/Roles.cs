@@ -5,6 +5,9 @@
         SuperAdmin,
         Admin,
         Moderator,
-        Basic
+        Basic,
+        Librarian,
+        Supervisor,
+        Borrower
     }
 }

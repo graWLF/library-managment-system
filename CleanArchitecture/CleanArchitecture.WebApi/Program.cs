@@ -1,18 +1,22 @@
 using CleanArchitecture.Core;
 using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Infrastructure;
+using CleanArchitecture.Infrastructure.Contexts;
 using CleanArchitecture.Infrastructure.Models;
 using CleanArchitecture.WebApi.Extensions;
 using CleanArchitecture.WebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
+using CleanArchitecture.Infrastructure.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,12 +26,17 @@ builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true
 
 // Add services to the container.
 builder.Services.AddApplicationLayer();
+//builder.Services.AddInfrastructureLayer(builder.Configuration); doesnt work
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddSwaggerExtension();
 builder.Services.AddControllers();
 builder.Services.AddApiVersioningExtension();
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 //Build the application
 var app = builder.Build();
