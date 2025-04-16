@@ -7,9 +7,9 @@ namespace CleanArchitecture.Core.Interfaces
     public interface IBookService
     {
         Task<IEnumerable<BookDto>> GetAllAsync();
-        Task<BookDto> GetByIdAsync(int id);
-        Task<BookDto> CreateAsync(BookDto bookDto);
-        Task<BookDto> UpdateAsync(int id, BookDto bookDto);
-        Task<bool> DeleteAsync(int id);
+        Task<BookDto> GetByISBNAsync(long isbn);
+        Task CreateAsync(BookDto dto);
+        Task UpdateAsync(long isbn, BookDto dto);
+        Task DeleteAsync(long isbn);
     }
 }

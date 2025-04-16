@@ -2,54 +2,61 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Core.DTOs;
+using CleanArchitecture.Core.Interfaces.Repositories;
 using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Core.DTOs.Book;
+using AutoMapper;
+using System;
+using CleanArchitecture.Core.Entities;
 
 namespace CleanArchitecture.Infrastructure.Services
 {
     public class BookService : IBookService
     {
-        private readonly List<BookDto> _books = new();
-        private int _nextId = 1;
+        private readonly IBookRepository _repository;
+        private readonly IMapper _mapper;
+
+        public BookService(IBookRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
         public async Task<IEnumerable<BookDto>> GetAllAsync()
         {
-            return await Task.FromResult(_books);
+            var books = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
-        public async Task<BookDto> GetByIdAsync(int id)
+        public async Task<BookDto> GetByISBNAsync(long isbn)
         {
-            var book = _books.FirstOrDefault(b => b.Id == id);
-            return await Task.FromResult(book);
+            var book = await _repository.GetByISBNAsync(isbn);
+            return _mapper.Map<BookDto>(book);
         }
 
-        public async Task<BookDto> CreateAsync(BookDto bookDto)
+        public async Task CreateAsync(BookDto dto)
         {
-            bookDto.Id = _nextId++;
-            _books.Add(bookDto);
-            return await Task.FromResult(bookDto);
+            var book = _mapper.Map<Book>(dto);
+            await _repository.AddAsync(book);
         }
 
-        public async Task<BookDto> UpdateAsync(int id, BookDto bookDto)
+        public async Task UpdateAsync(long isbn, BookDto dto)
         {
-            var book = _books.FirstOrDefault(b => b.Id == id);
-            if (book == null) return null;
+            var existing = await _repository.GetByISBNAsync(isbn);
+            if (existing == null) throw new Exception("Book not found");
 
-            book.Title = bookDto.Title;
-            book.Author = bookDto.Author;
-            book.ISBN = bookDto.ISBN;
-            book.PublishedOn = bookDto.PublishedOn;
-
-            return await Task.FromResult(book);
+            _mapper.Map(dto, existing);
+            await _repository.UpdateAsync(existing);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(long isbn)
         {
-            var book = _books.FirstOrDefault(b => b.Id == id);
-            if (book == null) return await Task.FromResult(false);
-            _books.Remove(book);
-            return await Task.FromResult(true);
+            var book = await _repository.GetByISBNAsync(isbn);
+            if (book == null) throw new Exception("Book not found");
+
+            await _repository.DeleteAsync(book);
         }
     }
+
 }
 

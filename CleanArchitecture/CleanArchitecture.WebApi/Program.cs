@@ -16,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using CleanArchitecture.Infrastructure.Services;
+using CleanArchitecture.Core.Interfaces.Repositories;
+using CleanArchitecture.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,10 @@ builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
 
 
 
