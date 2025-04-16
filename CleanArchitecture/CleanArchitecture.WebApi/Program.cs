@@ -50,6 +50,9 @@ builder.Services.AddScoped<IBorrowerService, BorrowerService>();
 builder.Services.AddScoped<IBorrowingRepository, BorrowingRepository>();
 builder.Services.AddScoped<IBorrowingService, BorrowingService>();
 
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchService, BranchService>();
+
 
 
 //Build the application
