@@ -24,7 +24,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{isbn}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int ID)
         {
             var result = await _authorService.GetByIDAsync(ID);
@@ -38,14 +38,14 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{isbn}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int ID, [FromBody] AuthorDTO dto)
         {
             await _authorService.UpdateAsync(ID, dto);
             return Ok();
         }
 
-        [HttpDelete("{isbn}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int ID)
         {
             await _authorService.DeleteAsync(ID);

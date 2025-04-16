@@ -24,7 +24,7 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{isbn}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetByISBN(long ID)
         {
             var result = await _borrowingService.GetByIDAsync(ID);
@@ -38,14 +38,14 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{isbn}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(long ID, [FromBody] BorrowingDTO dto)
         {
             await _borrowingService.UpdateAsync(ID, dto);
             return Ok();
         }
 
-        [HttpDelete("{isbn}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long ID)
         {
             await _borrowingService.DeleteAsync(ID);

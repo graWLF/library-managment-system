@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Core.DTOs.Branch;
+﻿using CleanArchitecture.Core.DTOs.Publisher;
 using CleanArchitecture.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,47 +8,47 @@ namespace CleanArchitecture.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BranchController : ControllerBase
+    public class PublisherController : ControllerBase
     {
-        private readonly IBranchService _branchService;
+        private readonly IPublisherService _publisherService;
 
-        public BranchController(IBranchService branchService)
+        public PublisherController(IPublisherService publisherService)
         {
-            _branchService = branchService;
+            _publisherService = publisherService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _branchService.GetAllAsync();
+            var result = await _publisherService.GetAllAsync();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int ID)
         {
-            var result = await _branchService.GetByIDAsync(ID);
+            var result = await _publisherService.GetByIDAsync(ID);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BranchDTO dto)
+        public async Task<IActionResult> Create([FromBody] PublisherDTO dto)
         {
-            await _branchService.CreateAsync(dto);
+            await _publisherService.CreateAsync(dto);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int ID, [FromBody] BranchDTO dto)
+        public async Task<IActionResult> Update(int ID, [FromBody] PublisherDTO dto)
         {
-            await _branchService.UpdateAsync(ID, dto);
+            await _publisherService.UpdateAsync(ID, dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int ID)
         {
-            await _branchService.DeleteAsync(ID);
+            await _publisherService.DeleteAsync(ID);
             return Ok();
         }
     }

@@ -12,9 +12,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DTOs\Librarian\" />
-    <Folder Include="DTOs\Supervisor\" />
-    <Folder Include="DTOs\Publisher\" />
-  </ItemGroup>
 </Project>

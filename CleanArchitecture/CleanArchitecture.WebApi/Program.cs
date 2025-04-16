@@ -53,6 +53,15 @@ builder.Services.AddScoped<IBorrowingService, BorrowingService>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 
+builder.Services.AddScoped<ILibrarianRepository, LibrarianRepository>();
+builder.Services.AddScoped<ILibrarianService, LibrarianService>();
+
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+builder.Services.AddScoped<IPublisherService, PublisherService>();
+
+builder.Services.AddScoped<ISupervisorRepository, SupervisorRepository>();
+builder.Services.AddScoped<ISupervisorService, SupervisorService>();
+
 
 
 //Build the application
