@@ -6,13 +6,13 @@ using CleanArchitecture.Core.DTOs.Book;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    [Route("api/[controller]")]
+    public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
 
-        public BooksController(IBookService bookService)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
         }
@@ -20,41 +20,37 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var books = await _bookService.GetAllAsync();
-            return Ok(books);
+            var result = await _bookService.GetAllAsync();
+            return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{isbn}")]
+        public async Task<IActionResult> GetByISBN(long isbn)
         {
-            var book = await _bookService.GetByIdAsync(id);
-            if (book == null) return NotFound();
-            return Ok(book);
+            var result = await _bookService.GetByISBNAsync(isbn);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BookDto bookDto)
+        public async Task<IActionResult> Create([FromBody] BookDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var createdBook = await _bookService.CreateAsync(bookDto);
-            return CreatedAtAction(nameof(GetById), new { id = createdBook.Id }, createdBook);
+            await _bookService.CreateAsync(dto);
+            return Ok();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] BookDto bookDto)
+        [HttpPut("{isbn}")]
+        public async Task<IActionResult> Update(long isbn, [FromBody] BookDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updatedBook = await _bookService.UpdateAsync(id, bookDto);
-            if (updatedBook == null) return NotFound();
-            return Ok(updatedBook);
+            await _bookService.UpdateAsync(isbn, dto);
+            return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{isbn}")]
+        public async Task<IActionResult> Delete(long isbn)
         {
-            var success = await _bookService.DeleteAsync(id);
-            if (!success) return NotFound();
-            return NoContent();
+            await _bookService.DeleteAsync(isbn);
+            return Ok();
         }
     }
+
 }

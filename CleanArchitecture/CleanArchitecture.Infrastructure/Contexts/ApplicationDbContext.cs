@@ -25,6 +25,14 @@ namespace CleanArchitecture.Infrastructure.Contexts
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Borrower> Borrowers { get; set; }
+
+        public DbSet<Borrowing> borrowings { get; set; }
+        public DbSet<Branch> branches { get; set; }
+        public DbSet<Librarian> librarians { get; set; }
+        public DbSet<Supervisor> supervisors { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
