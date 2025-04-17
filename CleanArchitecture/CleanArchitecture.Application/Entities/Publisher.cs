@@ -8,7 +8,9 @@ namespace CleanArchitecture.Core.Entities
 {
     public class Publisher
     {
-        public int PublisherId { get; set; }
+        public int Id { get; set; }
         public string PublisherName { get; set; }
+
+        
     }
 }

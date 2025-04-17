@@ -8,7 +8,7 @@ namespace CleanArchitecture.Core.Entities
 {
     public class Book
     {
-        public long ISBN { get; set; }
+        public long ID { get; set; }
         public string LocalISBN { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }

@@ -9,9 +9,11 @@ namespace CleanArchitecture.Core.Entities
 {
     public class Borrower
     {
-        public int BorrowerId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public Roles? Role { get; set; }
+
+        public ICollection<Borrowing> Borrowings { get; set; }
     }
 }

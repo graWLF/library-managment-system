@@ -11,5 +11,7 @@ namespace CleanArchitecture.Core.Entities
         public int Id { get; set; }
         public string BranchName { get; set; }
         public string BranchAddress { get; set; }
+
+        public ICollection<Borrowing> Borrowings { get; set; }
     }
 }
