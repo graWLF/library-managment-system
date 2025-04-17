@@ -12,6 +12,6 @@ namespace CleanArchitecture.Core.DTOs.Borrower
         public int BorrowerId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
-        public Roles? Role { get; set; }
+        
     }
 }
