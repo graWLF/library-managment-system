@@ -12,6 +12,7 @@ namespace CleanArchitecture.Core.Entities
     public class Borrowing
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("itemno")]
         public long Id { get; set; }
 

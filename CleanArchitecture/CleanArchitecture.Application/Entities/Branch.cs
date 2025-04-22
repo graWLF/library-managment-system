@@ -12,6 +12,7 @@ namespace CleanArchitecture.Core.Entities
     public class Branch
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("branchid")]
         public int Id { get; set; }
         public string branchname { get; set; }

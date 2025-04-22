@@ -12,6 +12,7 @@ namespace CleanArchitecture.Core.Entities
     public class Supervisor
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("supervisorid")]
         public int Id { get; set; }
         public string supervisorname { get; set; }

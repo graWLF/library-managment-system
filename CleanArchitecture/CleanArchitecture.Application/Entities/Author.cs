@@ -12,6 +12,7 @@ namespace CleanArchitecture.Core.Entities
     public class Author
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("authorid")]
         public int Id { get; set; }
         public string author { get; set; }

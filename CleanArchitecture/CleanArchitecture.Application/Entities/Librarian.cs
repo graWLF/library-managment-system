@@ -14,7 +14,7 @@ namespace CleanArchitecture.Core.Entities
         [Key]
         [Column("librarianid")]
         public int Id { get; set; }
-        [Key]
+        
         public int supervisorid { get; set; }
         public string librarianname { get; set; }
 

@@ -13,6 +13,7 @@ namespace CleanArchitecture.Core.Entities
     public class Borrower
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("borrowerid")]
         public int Id { get; set; }
         public string borrowername { get; set; }
