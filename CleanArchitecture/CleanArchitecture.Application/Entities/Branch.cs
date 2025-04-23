@@ -11,6 +11,7 @@ namespace CleanArchitecture.Core.Entities
     [Table("branch")]
     public class Branch
     {
+        //assign keys
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("branchid")]
