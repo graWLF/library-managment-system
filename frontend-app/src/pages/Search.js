@@ -9,15 +9,18 @@ function Search() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    console.log('Searching for book:', bookName); // Log the search term
     try {
-      const result = await fetchBookByName(bookName);
-      setBook(result);
-      setError(null); // Clear any previous errors
+        const result = await fetchBookByName(bookName);
+        console.log('Search Result:', result); // Log the result
+        setBook(result[0]);
+        setError(null);
     } catch (err) {
-      setBook(null);
-      setError('Failed to fetch book. Please check the name and try again.');
+        console.error('Error fetching book:', err); // Log the error
+        setBook(null);
+        setError('Failed to fetch book. Please check the name and try again.');
     }
-  };
+};
 
   return (
     <div className="search-page">
