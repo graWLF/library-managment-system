@@ -6,6 +6,7 @@ using CleanArchitecture.Core.DTOs.Borrowing;
 using CleanArchitecture.Core.DTOs.Branch;
 using CleanArchitecture.Core.DTOs.Librarian;
 using CleanArchitecture.Core.DTOs.Publisher;
+using CleanArchitecture.Core.DTOs.Registration;
 using CleanArchitecture.Core.DTOs.Supervisor;
 using CleanArchitecture.Core.Entities;
 using CleanArchitecture.Core.Features.Categories.Queries.GetAllCategories;
@@ -61,6 +62,11 @@ namespace CleanArchitecture.Core.Mappings
             // Supervisor
             CreateMap<Supervisor, SupervisorDTO>();
             CreateMap<SupervisorDTO, Supervisor>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            
+            // Registration
+            CreateMap<Registration, RegistrationDTO>();
+            CreateMap<RegistrationDTO, Registration>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         }

@@ -33,6 +33,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
         public DbSet<Branch> branches { get; set; }
         public DbSet<Librarian> librarians { get; set; }
         public DbSet<Supervisor> supervisors { get; set; }
+        public DbSet<Registration> registrations { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -71,6 +72,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Publisher>().ToTable("publisher_table");
             builder.Entity<Librarian>().ToTable("librarian");
             builder.Entity<Supervisor>().ToTable("supervisor");
+            builder.Entity<Registration>().ToTable("registration");
 
             // Configure primary keys and identity columns if needed
             builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno").ValueGeneratedOnAdd();
@@ -81,6 +83,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Publisher>().Property(p => p.Id).HasColumnName("publisherid").ValueGeneratedOnAdd();
             builder.Entity<Librarian>().Property(l => l.Id).HasColumnName("librarianid").ValueGeneratedOnAdd();
             builder.Entity<Supervisor>().Property(s => s.Id).HasColumnName("supervisorid").ValueGeneratedOnAdd();
+            builder.Entity<Registration>().Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
 
 
             builder.Entity<ApplicationUser>(entity =>
