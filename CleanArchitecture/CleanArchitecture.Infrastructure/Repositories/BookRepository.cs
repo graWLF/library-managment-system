@@ -28,6 +28,12 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             return await _context.Books.FindAsync(isbn);
         }
+        public async Task<IEnumerable<Book>> GetByNameAsync(string name)
+        {
+            return await _context.Books
+                .Where(b => b.title.Contains(name)) // Filter by name
+                .ToListAsync();
+        }
 
         public async Task AddAsync(Book book)
         {

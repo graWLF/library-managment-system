@@ -31,6 +31,13 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var result = await _bookService.GetByNameAsync(name);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BookDto dto)
         {
