@@ -12,6 +12,7 @@ namespace CleanArchitecture.Core.Entities
     public class Librarian
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("librarianid")]
         public int Id { get; set; }
         
