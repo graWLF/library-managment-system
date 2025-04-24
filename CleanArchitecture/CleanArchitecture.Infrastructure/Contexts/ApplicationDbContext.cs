@@ -33,6 +33,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
         public DbSet<Branch> branches { get; set; }
         public DbSet<Librarian> librarians { get; set; }
         public DbSet<Supervisor> supervisors { get; set; }
+        public DbSet<Registration> registrations { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -61,6 +62,29 @@ namespace CleanArchitecture.Infrastructure.Contexts
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+            // Explicitly map entities to tables
+            builder.Entity<Borrowing>().ToTable("borrowing");
+            builder.Entity<Borrower>().ToTable("borrower");
+            builder.Entity<Branch>().ToTable("branch");
+            builder.Entity<Book>().ToTable("book_info");
+            builder.Entity<Author>().ToTable("author_table");
+            builder.Entity<Publisher>().ToTable("publisher_table");
+            builder.Entity<Librarian>().ToTable("librarian");
+            builder.Entity<Supervisor>().ToTable("supervisor");
+            builder.Entity<Registration>().ToTable("registration");
+
+            // Configure primary keys and identity columns if needed
+            builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno").ValueGeneratedOnAdd();
+            builder.Entity<Borrower>().Property(b => b.Id).HasColumnName("borrowerid").ValueGeneratedOnAdd();
+            builder.Entity<Branch>().Property(b => b.Id).HasColumnName("branchid").ValueGeneratedOnAdd();
+            builder.Entity<Book>().Property(b => b.ID).HasColumnName("isbn").ValueGeneratedOnAdd();
+            builder.Entity<Author>().Property(a => a.Id).HasColumnName("authorid").ValueGeneratedOnAdd();
+            builder.Entity<Publisher>().Property(p => p.Id).HasColumnName("publisherid").ValueGeneratedOnAdd();
+            builder.Entity<Librarian>().Property(l => l.Id).HasColumnName("librarianid").ValueGeneratedOnAdd();
+            builder.Entity<Supervisor>().Property(s => s.Id).HasColumnName("supervisorid").ValueGeneratedOnAdd();
+            builder.Entity<Registration>().Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
 
             builder.Entity<ApplicationUser>(entity =>
             {

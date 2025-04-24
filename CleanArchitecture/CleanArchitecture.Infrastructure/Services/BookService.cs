@@ -13,7 +13,7 @@ namespace CleanArchitecture.Infrastructure.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookRepository _repository;
+         private readonly IBookRepository _repository;
         private readonly IMapper _mapper;
 
         public BookService(IBookRepository repository, IMapper mapper)
@@ -32,6 +32,12 @@ namespace CleanArchitecture.Infrastructure.Services
         {
             var book = await _repository.GetByISBNAsync(isbn);
             return _mapper.Map<BookDto>(book);
+        }
+
+        public async Task<IEnumerable<BookDto>> GetByNameAsync(string name)
+        {
+            var books = await _repository.GetByNameAsync(name); // Use repository
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
         public async Task CreateAsync(BookDto dto)

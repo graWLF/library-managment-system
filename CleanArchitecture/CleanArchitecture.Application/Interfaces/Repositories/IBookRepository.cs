@@ -11,6 +11,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
     {
         Task<IEnumerable<Book>> GetAllAsync();
         Task<Book> GetByISBNAsync(long isbn);
+        Task<IEnumerable<Book>> GetByNameAsync(string name);
         Task AddAsync(Book book);
         Task UpdateAsync(Book book);
         Task DeleteAsync(Book book);

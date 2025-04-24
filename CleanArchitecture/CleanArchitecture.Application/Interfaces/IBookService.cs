@@ -8,6 +8,7 @@ namespace CleanArchitecture.Core.Interfaces
     {
         Task<IEnumerable<BookDto>> GetAllAsync();
         Task<BookDto> GetByISBNAsync(long isbn);
+        Task<IEnumerable<BookDto>> GetByNameAsync(string name);
         Task CreateAsync(BookDto dto);
         Task UpdateAsync(long isbn, BookDto dto);
         Task DeleteAsync(long isbn);
