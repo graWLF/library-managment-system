@@ -82,20 +82,20 @@ function Search() {
                 <td>{selectedBook.title}</td>
               </tr>
               <tr>
-                <th>Author</th>
-                <td>{selectedBook.author}</td>
+                <th>Category</th>
+                <td>{selectedBook.category}</td>
               </tr>
               <tr>
-                <th>Total Copies</th>
-                <td>{selectedBook.totalCopies}</td>
+                <th>Pages</th>
+                <td>{selectedBook.pages}</td>
               </tr>
               <tr>
-                <th>Left</th>
-                <td>{selectedBook.left}</td>
+                <th>Type</th>
+                <td>{selectedBook.type}</td>
               </tr>
               <tr>
-                <th>Branch Name</th>
-                <td>{selectedBook.branchName}</td>
+                <th>Duration</th>
+                <td>{selectedBook.duration}</td>
               </tr>
             </tbody>
           </table>
