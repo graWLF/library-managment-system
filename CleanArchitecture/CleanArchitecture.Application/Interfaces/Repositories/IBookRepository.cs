@@ -9,7 +9,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> GetAllAsync();
+        Task<IEnumerable<Book>> GetAllAsync(); //book
         Task<Book> GetByISBNAsync(long isbn);
         Task<IEnumerable<Book>> GetByNameAsync(string name);
         Task AddAsync(Book book);
