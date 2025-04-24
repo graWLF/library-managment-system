@@ -61,5 +61,20 @@ namespace CleanArchitecture.Infrastructure.Services
 
             await _repository.DeleteAsync(registration);
         }
+
+        // Login a registration
+        public bool Login(string username, string password)
+        {
+            bool registration = _repository.Login(username, password);
+            //if (registration == false)
+                // show error message
+
+
+                //throw new Exception("Invalid credentials.");
+
+            // Here you would typically check the password, etc.
+            // For simplicity, we are just returning the registration DTO
+            return registration;
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
         Task AddAsync(Registration registration);
         Task UpdateAsync(Registration registration);
         Task DeleteAsync(Registration registration);
+        bool Login(string username, string password);
     }
 }

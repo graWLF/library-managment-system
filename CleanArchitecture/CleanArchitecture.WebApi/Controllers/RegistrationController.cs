@@ -63,5 +63,24 @@ namespace CleanArchitecture.WebApi.Controllers
             await _registrationService.DeleteAsync(id);
             return NoContent(); // Use 204 No Content for successful DELETE
         }
+
+        // Fixed the Login method to handle the issue with the return type of LoginAsync.
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await Task.Run(() => _registrationService.Login(loginRequest.Username, loginRequest.Password));
+            if (!result || result == false)
+                return Unauthorized("Invalid credentials.");
+
+            return Ok("Login successful.");
+        }
+    }
+    public class LoginRequestDTO
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

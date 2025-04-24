@@ -15,5 +15,8 @@ namespace CleanArchitecture.Core.Interfaces
         Task CreateAsync(RegistrationDTO dto);
         Task UpdateAsync(int ID, RegistrationDTO dto);
         Task DeleteAsync(int ID);
+
+        // login
+        bool Login(string username, string password);
     }
 }
