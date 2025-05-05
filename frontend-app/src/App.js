@@ -24,6 +24,7 @@ function App() {
           }
         />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/borrowers" element={<BorrowerManagement />} />
       </Routes>
     </Router>
   );
