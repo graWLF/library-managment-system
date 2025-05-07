@@ -8,7 +8,7 @@ namespace CleanArchitecture.Core.DTOs.Borrowing
 {
     public class BorrowingDTO
     {
-        public long ItemNo { get; set; }
+        public long Id { get; set; }
         public int BorrowerId { get; set; }
         public int BranchId { get; set; }
         public String BorrowDate { get; set; }
