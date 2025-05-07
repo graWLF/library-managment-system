@@ -57,11 +57,11 @@ function Search() {
           <ul className="book-list">
             {books.map((book) => (
               <li
-                key={book.isbn}
+                key={book.id}
                 className="book-list-item"
                 onClick={() => setSelectedBook(book)}
               >
-                <strong>{book.title}</strong> (ISBN: {book.isbn})
+                <strong>{book.title}</strong> (ISBN: {book.id})
               </li>
             ))}
           </ul>
@@ -75,7 +75,7 @@ function Search() {
             <tbody>
               <tr>
                 <th>ISBN</th>
-                <td>{selectedBook.isbn}</td>
+                <td>{selectedBook.id}</td>
               </tr>
               <tr>
                 <th>Title</th>
