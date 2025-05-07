@@ -26,18 +26,18 @@ function BorrowerManagement() {
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>Books Borrowed</th>
+            <th>Phone</th>
           </tr>
         </thead>
         <tbody>
           {borrowers.length > 0 ? (
             borrowers.map((borrower) => (
               <tr key={borrower.id}>
-                <td>{borrower.name}</td>
-                <td>{borrower.email}</td>
-                <td>{borrower.booksBorrowed}</td>
+                <td>{borrower.id}</td>
+                <td>{borrower.borrowerName}</td>
+                <td>{borrower.borrowerPhone}</td>
               </tr>
             ))
           ) : (
