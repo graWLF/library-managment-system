@@ -5,8 +5,8 @@ namespace CleanArchitecture.Core.DTOs.Book
 {
     public class BookDto
     {
-        public long ID { get; set; }
-        public string LocalISBN { get; set; }
+        public long Id { get; set; }
+        public string Local_isbn { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }
         public string Category { get; set; }
@@ -21,7 +21,7 @@ namespace CleanArchitecture.Core.DTOs.Book
         public string ContentLink { get; set; }
         public int LibrarianId { get; set; }
         public string Format { get; set; }
-        public string PublisingStatus { get; set; }
+        public string publishingstatus { get; set; }
         public string ReleaseDate { get; set; }
         public int PublisherId { get; set; }
         public int Pages { get; set; }

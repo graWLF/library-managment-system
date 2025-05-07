@@ -12,11 +12,8 @@ namespace CleanArchitecture.Core.Entities
     public class Borrowing
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("itemno")]
         public long Id { get; set; }
-
-        
         public int borrowerid { get; set; }
         public int branchid { get; set; }
         public String borrowdate { get; set; }

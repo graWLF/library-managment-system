@@ -75,15 +75,17 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Registration>().ToTable("registration");
 
             // Configure primary keys and identity columns if needed
-            builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno").ValueGeneratedOnAdd();
             builder.Entity<Borrower>().Property(b => b.Id).HasColumnName("borrowerid").ValueGeneratedOnAdd();
             builder.Entity<Branch>().Property(b => b.Id).HasColumnName("branchid").ValueGeneratedOnAdd();
-            builder.Entity<Book>().Property(b => b.ID).HasColumnName("isbn").ValueGeneratedOnAdd();
             builder.Entity<Author>().Property(a => a.Id).HasColumnName("authorid").ValueGeneratedOnAdd();
             builder.Entity<Publisher>().Property(p => p.Id).HasColumnName("publisherid").ValueGeneratedOnAdd();
             builder.Entity<Librarian>().Property(l => l.Id).HasColumnName("librarianid").ValueGeneratedOnAdd();
             builder.Entity<Supervisor>().Property(s => s.Id).HasColumnName("supervisorid").ValueGeneratedOnAdd();
             builder.Entity<Registration>().Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            // Define a composite key
+            builder.Entity<Borrowing>().HasKey(b => new { b.borrowerid, b.borrowdate, b.duedate });
+            builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno");
+            builder.Entity<Book>().Property(b => b.Id).HasColumnName("isbn");
 
 
             builder.Entity<ApplicationUser>(entity =>

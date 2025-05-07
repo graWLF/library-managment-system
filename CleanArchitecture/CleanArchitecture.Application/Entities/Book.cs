@@ -12,10 +12,9 @@ namespace CleanArchitecture.Core.Entities
     public class Book
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("isbn")]
         
-        public long ID { get; set; }
+        public long Id { get; set; }
         public string local_isbn { get; set; }   
         public string type { get; set; }
         public string title { get; set; }
