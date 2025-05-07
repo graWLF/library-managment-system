@@ -6,6 +6,7 @@ import Search from './pages/Search';
 import AdminDashboard from './pages/AdminDashboard';
 import BorrowerManagement from './pages/BorrowerManagement';
 import Layout from './Layout';
+import AddBook from './pages/AddBook';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +25,8 @@ function App() {
           }
         />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/borrowers" element={<BorrowerManagement />} />
+        <Route path="/admin/add-book" element={<AddBook />} />
       </Routes>
     </Router>
   );

@@ -12,7 +12,9 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <div className="sidebar">
-        <button>Add Book</button>
+        <Link to="/admin/add-book">
+          <button>Add Book</button>
+        </Link>
         <button>Librarian</button>
         <button>Supervisor</button>
         <Link to="/admin/borrowers">

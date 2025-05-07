@@ -62,3 +62,11 @@ export const deleteBook = async (id) => {
         throw new Error("Failed to delete book");
     }
 };
+
+export const fetchBorrowers = async () => {
+    const response = await fetch(`${API_BASE_URL}/borrower`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch borrowers");
+    }
+    return response.json();
+}
