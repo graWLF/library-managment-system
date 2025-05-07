@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { postBook } from '../api/Services'; // Ensure this function is defined in your Services.js file
 
 function AddBook() {
   const [title, setTitle] = useState('');
@@ -9,16 +10,8 @@ function AddBook() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, author, isbn }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add book');
-      }
-
+      const book = { title, author, isbn }; // Create the book object
+      await postBook(book); // Call the postBook method
       setMessage('Book added successfully!');
       setTitle('');
       setAuthor('');

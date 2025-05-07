@@ -70,3 +70,15 @@ export const fetchBorrowers = async () => {
     }
     return response.json();
 }
+
+export const postBook = async (book) => {
+    const response = await fetch(`${API_BASE_URL}/book`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add book");
+    }
+    return response.json();
+}
