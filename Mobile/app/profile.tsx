@@ -1,39 +1,63 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import axios from 'axios';
+import API_BASE_URL from '@/api/apiConfig';
 
 const ProfileScreen = () => {
-  const router = useRouter();
+  const [userData, setUserData] = useState<any>(null);
 
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem('authToken');
-    router.replace('/login');
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        console.log("➡️ Kullanıcı Bilgileri İsteniyor...");
+        const response = await axios.get(`${API_BASE_URL}/Registration`);
+        console.log("✅ Kullanıcı Bilgileri Geldi:", response.data);
+
+        // Gelen yanıtı kaydedelim:
+        if (response.data) {
+          setUserData(response.data);
+        }
+      } catch (error: any) {  // <-- Burada any olarak belirttim
+        console.error("❌ Kullanıcı Bilgileri Alınamadı:", error.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>👤 Lib++ User Profile</Text>
-      <Text style={styles.subtitle}>You're logged in. Welcome to the app!</Text>
-
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
+      {userData ? (
+        <>
+          <Text style={styles.title}>Merhaba, {userData.username}!</Text>
+          <Text style={styles.info}>Email: {userData.email}</Text>
+          <Text style={styles.info}>Name: {userData.name}</Text>
+          <Text style={styles.info}>Lastname: {userData.lastname}</Text>
+        </>
+      ) : (
+        <Text style={styles.info}>Yükleniyor...</Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f7f7ff', justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: '700', color: '#6a0dad', marginBottom: 10 },
-  subtitle: { fontSize: 16, color: '#333', marginBottom: 30 },
-  logoutButton: {
-    backgroundColor: '#ff5c5c',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#181818',
   },
-  logoutText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#6a0dad',
+  },
+  info: {
+    fontSize: 18,
+    color: '#ccc',
+    marginVertical: 5,
+  },
 });
 
 export default ProfileScreen;

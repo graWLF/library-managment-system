@@ -1,187 +1,110 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
+  Text,
   StyleSheet,
   Alert,
-  KeyboardAvoidingView,
 } from 'react-native';
-import axios from 'axios';
 import { useRouter } from 'expo-router';
-
-
+import { registerUser } from '@/api/services';
 
 const RegisterScreen = () => {
   const router = useRouter();
-
+  const [username, setUsername] = useState('');
   const [name, setName] = useState('');
+  const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
-
-  const validateInputs = () => {
-    const newErrors: { name?: string; email?: string; password?: string } = {};
-
-    if (!name.trim()) {
-      newErrors.name = 'Name is required.';
-    }
-
-    if (!email.trim()) {
-      newErrors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Invalid email format.';
-    }
-
-    if (!password.trim()) {
-      newErrors.password = 'Password is required.';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleRegister = async () => {
-    if (!validateInputs()) return;
-
     try {
-      const response = await axios.post('http://YOUR-IP-ADDRESS/registration', {
+      const userData = {
+        id: 0,
+        username,
         name,
+        lastname,
         email,
         password,
-      });
+        authLevel: 0,
+      };
 
-      if (response.status === 200 || response.status === 201) {
-        Alert.alert('Registration Successful', 'You can now log in to your account.');
-        router.replace('/login');
+      await registerUser(userData);
+      Alert.alert('Success', 'Registration successful');
+      router.replace('/login');
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Registration Error (Backend):", error.response.data);
+        Alert.alert('Error', error.response.data.message || "Registration failed.");
       } else {
-        Alert.alert('Registration Failed', 'Please try again.');
+        console.error("Registration Error (Network):", error.message);
+        Alert.alert('Error', 'Network error. Please try again.');
       }
-    } catch (err: any) {
-      console.error(err);
-      Alert.alert('Registration Error', 'An error occurred. Please try again.');
     }
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <Text style={styles.brand}>Create your <Text style={styles.brandHighlight}>Lib++</Text> account</Text>
-      <Text style={styles.subtitle}>Start managing your books smarter</Text>
-
-      <View style={styles.form}>
-        <TextInput
-          style={[styles.input, errors.name && styles.inputError]}
-          placeholder="Name"
-          placeholderTextColor="#888"
-          onChangeText={setName}
-          value={name}
-        />
-        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-
-        <TextInput
-          style={[styles.input, errors.email && styles.inputError]}
-          placeholder="Email"
-          placeholderTextColor="#888"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          onChangeText={setEmail}
-          value={email}
-        />
-        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-
-        <TextInput
-          style={[styles.input, errors.password && styles.inputError]}
-          placeholder="Password"
-          placeholderTextColor="#888"
-          secureTextEntry
-          onChangeText={setPassword}
-          value={password}
-        />
-        {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Lib++ Register</Text>
+        <TextInput placeholder="Username" style={styles.input} onChangeText={setUsername} value={username} />
+        <TextInput placeholder="Name" style={styles.input} onChangeText={setName} value={name} />
+        <TextInput placeholder="Lastname" style={styles.input} onChangeText={setLastname} value={lastname} />
+        <TextInput placeholder="Email" style={styles.input} onChangeText={setEmail} value={email} />
+        <TextInput placeholder="Password" style={styles.input} secureTextEntry onChangeText={setPassword} value={password} />
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push('/login')}>
-          <Text style={styles.loginLink}>Already have an account? Log in</Text>
-        </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
-
-const PRIMARY_PURPLE = '#6a0dad';
-const SECONDARY_GREEN = '#228B22';
-const ACCENT_ORANGE = '#ffa500';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f7ff',
     justifyContent: 'center',
-    paddingHorizontal: 28,
+    alignItems: 'center',
+    backgroundColor: '#181818',
   },
-  brand: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 4,
+  innerContainer: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: '#282828',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
   },
-  brandHighlight: {
-    color: PRIMARY_PURPLE,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#666',
-    marginBottom: 30,
-  },
-  form: {
-    gap: 10,
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#6a0dad',
   },
   input: {
-    backgroundColor: '#fff',
+    width: '100%',
+    borderWidth: 1,
     borderColor: '#ccc',
-    borderWidth: 1.3,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 13,
-    fontSize: 16,
-  },
-  inputError: {
-    borderColor: 'red',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 13,
-    marginBottom: 4,
-    marginLeft: 4,
+    padding: 12,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: '#333',
+    color: '#fff',
   },
   button: {
-    backgroundColor: SECONDARY_GREEN,
-    borderRadius: 10,
-    paddingVertical: 14,
-    marginTop: 12,
+    backgroundColor: '#6a0dad',
+    padding: 15,
+    borderRadius: 8,
+    width: '100%',
     alignItems: 'center',
-    elevation: 2,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: '700',
     fontSize: 16,
-  },
-  loginLink: {
-    color: PRIMARY_PURPLE,
-    textAlign: 'center',
-    marginTop: 16,
-    fontSize: 14,
-    textDecorationLine: 'underline',
+    fontWeight: '600',
   },
 });
-  
+
 export default RegisterScreen;

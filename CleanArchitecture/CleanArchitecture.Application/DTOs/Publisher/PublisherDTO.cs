@@ -8,7 +8,7 @@ namespace CleanArchitecture.Core.DTOs.Publisher
 {
     public class PublisherDTO
     {
-        public int PublisherId { get; set; }
-        public string PublisherName { get; set; }
+        public int Id { get; set; }
+        public string publisher { get; set; }
     }
 }

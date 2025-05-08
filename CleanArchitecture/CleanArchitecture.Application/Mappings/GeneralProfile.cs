@@ -26,8 +26,8 @@ namespace CleanArchitecture.Core.Mappings
             CreateMap<Category, GetAllCategoriesViewModel>().ReverseMap();
             // Book
             CreateMap<Book, BookDto>();
-            CreateMap<BookDto, Book>()
-                .ForMember(dest => dest.ID, opt => opt.Ignore());
+            CreateMap<BookDto, Book>();
+                //.ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // Author
             CreateMap<Author, AuthorDTO>();
@@ -41,8 +41,8 @@ namespace CleanArchitecture.Core.Mappings
 
             // Borrowing
             CreateMap<Borrowing, BorrowingDTO>();
-            CreateMap<BorrowingDTO, Borrowing>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<BorrowingDTO, Borrowing>();
+                //.ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // Branch
             CreateMap<Branch, BranchDTO>();
