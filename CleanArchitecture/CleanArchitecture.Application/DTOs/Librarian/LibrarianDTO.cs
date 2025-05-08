@@ -8,7 +8,7 @@ namespace CleanArchitecture.Core.DTOs.Librarian
 {
     public class LibrarianDTO
     {
-        public int LibrarianId { get; set; }
+        public int Id { get; set; }
         public int SupervisorId { get; set; }
         public string LibrarianName { get; set; }
     }

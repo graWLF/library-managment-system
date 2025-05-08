@@ -70,3 +70,62 @@ export const fetchBorrowers = async () => {
     }
     return response.json();
 }
+
+export const postBook = async (book) => {
+    const response = await fetch(`${API_BASE_URL}/book`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add book");
+    }
+    return response.json();
+}
+
+export async function createBorrower(data) {
+    const response = await fetch(`${API_BASE_URL}/borrower`, {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: 0, // or omit if the backend sets ID automatically
+        borrowerName: data.borrowerName,
+        borrowerPhone: data.borrowerPhone
+      })
+    });
+  
+    return response.ok;
+  }
+  
+  
+  export async function createBorrowing(data) {
+    const response = await fetch(`${API_BASE_URL}/borrowing`, {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: data.id,  
+        borrowerId: data.borrowerId,
+        branchId: data.branchId ?? 0,  // Optional, default to 0
+        borrowDate: data.borrowDate,
+        dueDate: data.dueDate,
+        returnStatus: data.returnStatus ?? false // Optional, default to false
+      })
+    });
+  
+    return response.ok;
+  }
+  
+  export const fetchBorrowings = async () => {
+    const response = await fetch(`${API_BASE_URL}/borrowing`); // Adjust this endpoint
+    if (!response.ok) throw new Error('Failed to fetch borrowings');
+    return await response.json();
+  };
+  
+  
+  

@@ -8,7 +8,7 @@ namespace CleanArchitecture.Core.DTOs.Supervisor
 {
     public class SupervisorDTO
     {
-        public int SupervisorId { get; set; }
+        public int Id { get; set; }
         public string SupervisorName { get; set; }
     }
 }

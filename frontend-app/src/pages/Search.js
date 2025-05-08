@@ -57,11 +57,11 @@ function Search() {
           <ul className="book-list">
             {books.map((book) => (
               <li
-                key={book.isbn}
+                key={book.id}
                 className="book-list-item"
                 onClick={() => setSelectedBook(book)}
               >
-                <strong>{book.title}</strong> (ISBN: {book.isbn})
+                <strong>{book.title}</strong> (ISBN: {book.id})
               </li>
             ))}
           </ul>
@@ -75,7 +75,7 @@ function Search() {
             <tbody>
               <tr>
                 <th>ISBN</th>
-                <td>{selectedBook.isbn}</td>
+                <td>{selectedBook.id}</td>
               </tr>
               <tr>
                 <th>Title</th>
@@ -96,6 +96,70 @@ function Search() {
               <tr>
                 <th>Duration</th>
                 <td>{selectedBook.duration}</td>
+              </tr>
+              <tr>
+                <th>Content</th>
+                <td>{selectedBook.content}</td>
+              </tr>
+              <tr>
+                <th>Info URL</th>
+                <td>{selectedBook.infoUrl}</td>
+              </tr>
+              <tr>
+                <th>Content Language</th>
+                <td>{selectedBook.contentLanguage}</td>
+              </tr>
+              <tr>
+                <th>Content Source</th>
+                <td>{selectedBook.contentSource}</td>
+              </tr>
+              <tr>
+                <th>Image</th>
+                <td>{selectedBook.image}</td>
+              </tr>
+              <tr>
+                <th>Price</th>
+                <td>{selectedBook.price}</td>
+              </tr>
+              <tr>
+                <th>Content Link</th>
+                <td>{selectedBook.contentLink}</td>
+              </tr>
+              <tr>
+                <th>Librarian ID</th>
+                <td>{selectedBook.librarianId}</td>
+              </tr>
+              <tr>
+                <th>Format</th>
+                <td>{selectedBook.format}</td>
+              </tr>
+              <tr>
+                <th>Publishing Status</th>
+                <td>{selectedBook.publishingstatus}</td>
+              </tr>
+              <tr>
+                <th>Release Date</th>
+                <td>{selectedBook.releaseDate}</td>
+              </tr>
+              <tr>
+                <th>Publisher ID</th>
+                <td>{selectedBook.publisherId}</td>
+              </tr>
+              <tr>
+                <th>Weight</th>
+                <td>{selectedBook.weight}</td>
+              </tr>
+              <tr>
+                <th>Dimensions</th>
+                <td>{selectedBook.dimensions}</td>
+              </tr>
+              <tr>
+                <th>Material</th>
+                <td>{selectedBook.material}</td>
+              </tr>
+              <tr>
+                <th>Color</th>
+                <td>{selectedBook.color}</td>
               </tr>
             </tbody>
           </table>

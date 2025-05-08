@@ -15,7 +15,7 @@ namespace CleanArchitecture.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("publisherid")]
         public int Id { get; set; }
-        public string publishername { get; set; }
+        public string publisher { get; set; }
 
         
     }
