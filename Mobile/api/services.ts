@@ -87,8 +87,8 @@ export const fetchBookByISBN = async (isbn: string) => {
 export const searchBooks = async (query: string) => {
   console.log("🔎 Sending search request for:", query);
   try {
-    const response = await axios.get(`/api/Book/search`, {
-      params: { query },
+    const response = await axios.get(`${API_BASE_URL}/Book/search`, {
+      params: { name: query }, // ✅ backend'in istediği parametre ismi
     });
     console.log("📚 Search Response Received:", response.data);
     return response.data;
@@ -97,6 +97,8 @@ export const searchBooks = async (query: string) => {
     return [];
   }
 };
+
+
 
 
 export const addBook = async (bookData: any) => {

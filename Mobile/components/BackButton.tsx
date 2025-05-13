@@ -1,4 +1,3 @@
-// components/BackButton.tsx
 import { useRouter } from 'expo-router';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
@@ -18,11 +17,14 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
     zIndex: 10,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    backgroundColor: '#6a0dad',
+    borderRadius: 8,
+    paddingVertical: 4,   
+    paddingHorizontal: 16, 
   },
   backText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
   },
 });
