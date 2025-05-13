@@ -8,6 +8,7 @@ import BorrowerManagement from './pages/BorrowerManagement';
 import Layout from './Layout';
 import AddBook from './pages/AddBook';
 import EditBook from './pages/EditBook';
+import EditBorrower from './pages/EditBorrower';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,6 +30,7 @@ function App() {
         <Route path="/admin/borrowers" element={<BorrowerManagement />} />
         <Route path="/admin/add-book" element={<AddBook />} />
         <Route path="/admin/edit-book/:id" element={<EditBook />} />
+        <Route path="/admin/edit-borrower/:id" element={<EditBorrower />} />
       </Routes>
     </Router>
   );

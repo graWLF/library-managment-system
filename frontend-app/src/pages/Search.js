@@ -164,14 +164,15 @@ function Search() {
               </tr>
             </tbody>
           </table>
-          <button onClick={() => setSelectedBook(null)} className="back-button">
-            ← Back to list
-          </button>
           <Link to={`/admin/edit-book/${selectedBook.id}`}>
           <button title="Edit">
                   <span role="img" aria-label="edit">✏️</span>
           </button>
           </Link>
+          <button onClick={() => setSelectedBook(null)} className="back-button">
+            ← Back to list
+          </button>
+          
         </div>
       )}
     </div>
