@@ -24,12 +24,14 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetByISBN(long ID)
+        [HttpGet("{itemNo}/{borrowerId}/{borrowDate}/{dueDate}")]
+        public async Task<IActionResult> GetByCompositeKey(long itemNo, long borrowerId, string borrowDate, string dueDate)
         {
-            var result = await _borrowingService.GetByIDAsync(ID);
+            var result = await _borrowingService.GetByCompositeKeyAsync(itemNo, borrowerId, borrowDate, dueDate);
+            if (result == null) return NotFound();
             return Ok(result);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BorrowingDTO dto)
@@ -38,18 +40,20 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(long ID, [FromBody] BorrowingDTO dto)
+        [HttpPut("{itemNo}/{borrowerId}/{borrowDate}/{dueDate}")]
+        public async Task<IActionResult> Update(long itemNo, long borrowerId, string borrowDate, string dueDate, [FromBody] BorrowingDTO dto)
         {
-            await _borrowingService.UpdateAsync(ID, dto);
+            await _borrowingService.UpdateAsync(itemNo, borrowerId, borrowDate, dueDate, dto);
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long ID)
+
+        [HttpDelete("{itemNo}/{borrowerId}/{borrowDate}/{dueDate}")]
+        public async Task<IActionResult> Delete(long itemNo, long borrowerId, string borrowDate, string dueDate)
         {
-            await _borrowingService.DeleteAsync(ID);
+            await _borrowingService.DeleteAsync(itemNo, borrowerId, borrowDate, dueDate);
             return Ok();
         }
+
     }
 }

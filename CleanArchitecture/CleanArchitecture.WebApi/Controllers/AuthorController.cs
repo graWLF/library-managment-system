@@ -25,9 +25,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByID(int ID)
+        public async Task<IActionResult> GetByID(int id)
         {
-            var result = await _authorService.GetByIDAsync(ID);
+            var result = await _authorService.GetByIDAsync(id);
             return Ok(result);
         }
 
@@ -39,16 +39,16 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int ID, [FromBody] AuthorDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] AuthorDTO dto)
         {
-            await _authorService.UpdateAsync(ID, dto);
+            await _authorService.UpdateAsync(id, dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int ID)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _authorService.DeleteAsync(ID);
+            await _authorService.DeleteAsync(id);
             return Ok();
         }
     }

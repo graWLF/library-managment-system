@@ -9,7 +9,7 @@ namespace CleanArchitecture.Core.DTOs.Borrower
 {
     public class BorrowerDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string borrowerName { get; set; }
         public string borrowerPhone { get; set; }
         

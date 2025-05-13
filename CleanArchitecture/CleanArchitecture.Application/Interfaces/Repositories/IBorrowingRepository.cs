@@ -10,7 +10,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
     public interface IBorrowingRepository
     {
         Task<IEnumerable<Borrowing>> GetAllAsync();
-        Task<Borrowing> GetByIDAsync(long id);
+        Task<Borrowing> GetByCompositeKeyAsync(long itemNo, long borrowerId, string borrowDate, string dueDate);
         Task AddAsync(Borrowing borrowing);
         Task UpdateAsync(Borrowing borrowing);
         Task DeleteAsync(Borrowing borrowing);

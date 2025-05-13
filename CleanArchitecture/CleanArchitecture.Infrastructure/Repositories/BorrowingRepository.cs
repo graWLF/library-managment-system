@@ -24,10 +24,15 @@ namespace CleanArchitecture.Infrastructure.Repositories
             return await _context.borrowings.ToListAsync();
         }
 
-        public async Task<Borrowing> GetByIDAsync(long ID)
+        public async Task<Borrowing> GetByCompositeKeyAsync(long itemNo, long borrowerId, string borrowDate, string dueDate)
         {
-            return await _context.borrowings.FindAsync(ID);
+            return await _context.borrowings.FirstOrDefaultAsync(b =>
+                b.Id == itemNo &&
+                b.borrowerid == borrowerId &&
+                b.borrowdate == borrowDate &&
+                b.duedate == dueDate);
         }
+
 
         public async Task AddAsync(Borrowing borrowing)
         {

@@ -29,7 +29,7 @@ namespace CleanArchitecture.Infrastructure.Services
             return _mapper.Map<IEnumerable<PublisherDTO>>(publishers);
         }
 
-        public async Task<PublisherDTO> GetByIDAsync(int ID)
+        public async Task<PublisherDTO> GetByIDAsync(long ID)
         {
             var publisher = await _repository.GetByIDAsync(ID);
             return _mapper.Map<PublisherDTO>(publisher);
@@ -41,7 +41,7 @@ namespace CleanArchitecture.Infrastructure.Services
             await _repository.AddAsync(publisher);
         }
 
-        public async Task UpdateAsync(int ID, PublisherDTO dto)
+        public async Task UpdateAsync(long ID, PublisherDTO dto)
         {
             var existing = await _repository.GetByIDAsync(ID);
             if (existing == null) throw new Exception("Publisher not found");
@@ -50,7 +50,7 @@ namespace CleanArchitecture.Infrastructure.Services
             await _repository.UpdateAsync(existing);
         }
 
-        public async Task DeleteAsync(int ID)
+        public async Task DeleteAsync(long ID)
         {
             var publisher = await _repository.GetByIDAsync(ID);
             if (publisher == null) throw new Exception("Publisher not found");

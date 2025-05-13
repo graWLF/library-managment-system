@@ -10,9 +10,9 @@ namespace CleanArchitecture.Core.Interfaces
     public interface IBorrowingService
     {
         Task<IEnumerable<BorrowingDTO>> GetAllAsync();
-        Task<BorrowingDTO> GetByIDAsync(long ID);
+        Task<BorrowingDTO?> GetByCompositeKeyAsync(long itemNo, long borrowerId, string borrowDate, string dueDate);
         Task CreateAsync(BorrowingDTO dto);
-        Task UpdateAsync(long ID, BorrowingDTO dto);
-        Task DeleteAsync(long ID);
+        Task UpdateAsync(long itemNo, long borrowerId, string borrowDate, string dueDate, BorrowingDTO dto);
+        Task DeleteAsync(long itemNo, long borrowerId, string borrowDate, string dueDate);
     }
 }

@@ -11,9 +11,9 @@ namespace CleanArchitecture.Core.Interfaces
     public interface IBorrowerService
     {
         Task<IEnumerable<BorrowerDTO>> GetAllAsync();
-        Task<BorrowerDTO> GetByIDAsync(int ID);
+        Task<BorrowerDTO> GetByIDAsync(long ID);
         Task CreateAsync(BorrowerDTO dto);
-        Task UpdateAsync(int ID, BorrowerDTO dto);
-        Task DeleteAsync(int ID);
+        Task UpdateAsync(long ID, BorrowerDTO dto);
+        Task DeleteAsync(long ID);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Core.DTOs.Supervisor;
 using CleanArchitecture.Core.Interfaces;
+using com.sun.xml.@internal.bind.v2.model.core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -25,9 +26,9 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByID(int ID)
+        public async Task<IActionResult> GetByID(int id)
         {
-            var result = await _supervisorService.GetByIDAsync(ID);
+            var result = await _supervisorService.GetByIDAsync(id);
             return Ok(result);
         }
 
@@ -39,16 +40,16 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int ID, [FromBody] SupervisorDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] SupervisorDTO dto)
         {
-            await _supervisorService.UpdateAsync(ID, dto);
+            await _supervisorService.UpdateAsync(id, dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int ID)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _supervisorService.DeleteAsync(ID);
+            await _supervisorService.DeleteAsync(id);
             return Ok();
         }
     }

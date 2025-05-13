@@ -25,9 +25,9 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByID(int ID)
+        public async Task<IActionResult> GetByID(int id)
         {
-            var result = await _publisherService.GetByIDAsync(ID);
+            var result = await _publisherService.GetByIDAsync(id);
             return Ok(result);
         }
 
@@ -39,16 +39,16 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int ID, [FromBody] PublisherDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] PublisherDTO dto)
         {
-            await _publisherService.UpdateAsync(ID, dto);
+            await _publisherService.UpdateAsync(id, dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int ID)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _publisherService.DeleteAsync(ID);
+            await _publisherService.DeleteAsync(id);
             return Ok();
         }
     }

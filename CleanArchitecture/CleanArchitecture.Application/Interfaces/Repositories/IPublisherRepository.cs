@@ -10,7 +10,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
     public interface IPublisherRepository
     {
         Task<IEnumerable<Publisher>> GetAllAsync();
-        Task<Publisher> GetByIDAsync(int id);
+        Task<Publisher> GetByIDAsync(long id);
         Task AddAsync(Publisher publisher);
         Task UpdateAsync(Publisher publisher);
         Task DeleteAsync(Publisher publisher);

@@ -14,7 +14,7 @@ namespace CleanArchitecture.Core.Entities
         [Key]
         [Column("itemno")]
         public long Id { get; set; }
-        public int borrowerid { get; set; }
+        public long borrowerid { get; set; }
         public int branchid { get; set; }
         public String borrowdate { get; set; }
         public String duedate { get; set; }

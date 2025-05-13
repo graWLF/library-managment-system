@@ -10,7 +10,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
     public interface IBorrowerRepository
     {
         Task<IEnumerable<Borrower>> GetAllAsync();
-        Task<Borrower> GetByIDAsync(int id);
+        Task<Borrower> GetByIdAsync(long id);
         Task AddAsync(Borrower borrower);
         Task UpdateAsync(Borrower borrower);
         Task DeleteAsync(Borrower borrower);

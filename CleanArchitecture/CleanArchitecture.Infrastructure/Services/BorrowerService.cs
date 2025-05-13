@@ -28,9 +28,9 @@ namespace CleanArchitecture.Infrastructure.Services
             return _mapper.Map<IEnumerable<BorrowerDTO>>(borrowers);
         }
 
-        public async Task<BorrowerDTO> GetByIDAsync(int ID)
+        public async Task<BorrowerDTO> GetByIDAsync(long ID)
         {
-            var borrower = await _repository.GetByIDAsync(ID);
+            var borrower = await _repository.GetByIdAsync(ID);
             return _mapper.Map<BorrowerDTO>(borrower);
         }
 
@@ -40,18 +40,18 @@ namespace CleanArchitecture.Infrastructure.Services
             await _repository.AddAsync(borrower);
         }
 
-        public async Task UpdateAsync(int ID, BorrowerDTO dto)
+        public async Task UpdateAsync(long ID, BorrowerDTO dto)
         {
-            var existing = await _repository.GetByIDAsync(ID);
+            var existing = await _repository.GetByIdAsync(ID);
             if (existing == null) throw new Exception("Borrower not found");
 
             _mapper.Map(dto, existing);
             await _repository.UpdateAsync(existing);
         }
 
-        public async Task DeleteAsync(int ID)
+        public async Task DeleteAsync(long ID)
         {
-            var borrower = await _repository.GetByIDAsync(ID);
+            var borrower = await _repository.GetByIdAsync(ID);
             if (borrower == null) throw new Exception("Borrower not found");
 
             await _repository.DeleteAsync(borrower);

@@ -10,9 +10,9 @@ namespace CleanArchitecture.Core.Interfaces
     public interface IPublisherService
     {
         Task<IEnumerable<PublisherDTO>> GetAllAsync();
-        Task<PublisherDTO> GetByIDAsync(int ID);
+        Task<PublisherDTO> GetByIDAsync(long ID);
         Task CreateAsync(PublisherDTO dto);
-        Task UpdateAsync(int ID, PublisherDTO dto);
-        Task DeleteAsync(int ID);
+        Task UpdateAsync(long ID, PublisherDTO dto);
+        Task DeleteAsync(long ID);
     }
 }

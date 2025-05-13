@@ -24,7 +24,7 @@ namespace CleanArchitecture.Infrastructure.Repositories
             return await _context.Borrowers.ToListAsync();
         }
 
-        public async Task<Borrower> GetByIDAsync(int ID)
+        public async Task<Borrower> GetByIdAsync(long ID)
         {
             return await _context.Borrowers.FindAsync(ID);
         }

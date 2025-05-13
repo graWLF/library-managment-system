@@ -28,11 +28,12 @@ namespace CleanArchitecture.Infrastructure.Services
             return _mapper.Map<IEnumerable<BorrowingDTO>>(borrowerings);
         }
 
-        public async Task<BorrowingDTO> GetByIDAsync(long ID)
+        public async Task<BorrowingDTO> GetByCompositeKeyAsync(long itemNo, long borrowerId, string borrowDate, string dueDate)
         {
-            var borrowing = await _repository.GetByIDAsync(ID);
-            return _mapper.Map<BorrowingDTO>(borrowing);
+            var entity = await _repository.GetByCompositeKeyAsync(itemNo, borrowerId, borrowDate, dueDate);
+            return _mapper.Map<BorrowingDTO>(entity);
         }
+
 
         public async Task CreateAsync(BorrowingDTO dto)
         {
@@ -40,21 +41,23 @@ namespace CleanArchitecture.Infrastructure.Services
             await _repository.AddAsync(borrowing);
         }
 
-        public async Task UpdateAsync(long ID, BorrowingDTO dto)
+        public async Task UpdateAsync(long itemNo, long borrowerId, string borrowDate, string dueDate, BorrowingDTO dto)
         {
-            var existing = await _repository.GetByIDAsync(ID);
+            var existing = await _repository.GetByCompositeKeyAsync(itemNo, borrowerId, borrowDate, dueDate);
             if (existing == null) throw new Exception("Borrowing not found");
 
             _mapper.Map(dto, existing);
             await _repository.UpdateAsync(existing);
         }
 
-        public async Task DeleteAsync(long ID)
-        {
-            var borrowing = await _repository.GetByIDAsync(ID);
-            if (borrowing == null) throw new Exception("Borrowing not found");
 
-            await _repository.DeleteAsync(borrowing);
+        public async Task DeleteAsync(long itemNo, long borrowerId, string borrowDate, string dueDate)
+        {
+            var existing = await _repository.GetByCompositeKeyAsync(itemNo, borrowerId, borrowDate, dueDate);
+            if (existing == null) throw new Exception("Borrowing not found");
+
+            await _repository.DeleteAsync(existing);
         }
+
     }
 }

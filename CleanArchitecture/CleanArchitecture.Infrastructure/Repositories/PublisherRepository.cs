@@ -24,7 +24,7 @@ namespace CleanArchitecture.Infrastructure.Repositories
             return await _context.Publishers.ToListAsync();
         }
 
-        public async Task<Publisher> GetByIDAsync(int PublisherID)
+        public async Task<Publisher> GetByIDAsync(long PublisherID)
         {
             return await _context.Publishers.FindAsync(PublisherID);
         }
