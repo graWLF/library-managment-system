@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { searchBooks } from '@/api/services';
 import BackButton from '../../components/BackButton';
 
@@ -17,6 +18,7 @@ const SearchScreen = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -34,11 +36,14 @@ const SearchScreen = () => {
   };
 
   const renderItem = ({ item }: { item: any }) => (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => router.push(`../book/${item.id}`)}
+    >
       <Text style={styles.bookTitle}>{item.title}</Text>
-      <Text style={styles.bookInfo}>ISBN: {item.isbn}</Text>
+      <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
       <Text style={styles.bookInfo}>Category: {item.category}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -46,9 +51,7 @@ const SearchScreen = () => {
       style={styles.container}
       behavior={Platform.select({ ios: 'padding', android: undefined })}
     >
-      <View style={styles.backButton}>
-        <BackButton />
-      </View>
+      <BackButton />
 
       <View style={styles.centerContent}>
         <Text style={styles.title}>Search for Books</Text>
@@ -74,7 +77,7 @@ const SearchScreen = () => {
           data={results}
           renderItem={renderItem}
           keyExtractor={(item) => item.id?.toString() || item.isbn}
-          contentContainerStyle={{ paddingTop: 20, paddingBottom: 80 }}
+          contentContainerStyle={styles.listContent}
         />
       )}
     </KeyboardAvoidingView>
@@ -86,16 +89,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#181818',
     paddingHorizontal: 24,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    zIndex: 10,
+    paddingTop: 40,
   },
   centerContent: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     gap: 18,
   },
   title: {
@@ -103,6 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#B266FF',
     textAlign: 'center',
+    marginBottom: 10,
   },
   input: {
     backgroundColor: '#1f1f1f',
@@ -113,12 +113,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: '#fff',
+    width: '100%',
   },
   button: {
     backgroundColor: '#6a0dad',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
+    width: '100%',
   },
   buttonText: {
     color: '#fff',
@@ -140,6 +142,9 @@ const styles = StyleSheet.create({
   bookInfo: {
     fontSize: 14,
     color: '#ccc',
+  },
+  listContent: {
+    paddingBottom: 80,
   },
 });
 

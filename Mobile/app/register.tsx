@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   View,
+  Text,
   TextInput,
   TouchableOpacity,
-  Text,
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
@@ -46,6 +46,8 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
+    if (!validateInputs()) return;
+
     try {
       const userData = {
         id: 0,
@@ -135,8 +137,12 @@ const RegisterScreen = () => {
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.push('/login')}>
+          <Text style={styles.loginLink}>Already have an account? Log in</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -146,9 +152,9 @@ const SECONDARY_GREEN = '#228B22';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f7f7ff',
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#181818',
+    paddingHorizontal: 28,
   },
   title: {
     fontSize: 26,
@@ -167,27 +173,42 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   input: {
-    width: '100%',
-    borderWidth: 1,
+    backgroundColor: '#fff',
     borderColor: '#ccc',
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 8,
-    backgroundColor: '#333',
-    color: '#fff',
+    borderWidth: 1.3,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 13,
+    fontSize: 16,
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 13,
+    marginBottom: 4,
+    marginLeft: 4,
   },
   button: {
-    backgroundColor: '#6a0dad',
-    padding: 15,
-    borderRadius: 8,
-    width: '100%',
+    backgroundColor: SECONDARY_GREEN,
+    borderRadius: 10,
+    paddingVertical: 14,
+    marginTop: 12,
     alignItems: 'center',
-    marginTop: 10,
+    elevation: 2,
   },
   buttonText: {
     color: '#fff',
+    fontWeight: '700',
     fontSize: 16,
-    fontWeight: '600',
+  },
+  loginLink: {
+    color: PRIMARY_PURPLE,
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
 
