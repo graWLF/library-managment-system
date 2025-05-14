@@ -87,12 +87,11 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Librarian>().Property(l => l.Id).HasColumnName("librarianid").ValueGeneratedOnAdd();
             builder.Entity<Supervisor>().Property(s => s.Id).HasColumnName("supervisorid").ValueGeneratedOnAdd();
             builder.Entity<Registration>().Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            builder.Entity<Book>().Property(b => b.Id).HasColumnName("isbn");
+            builder.Entity<BookCopy>().Property(b => b.Id).HasColumnName("itemno");
             // Define a composite key
             builder.Entity<Borrowing>().HasKey(b => new { b.borrowerid, b.borrowdate, b.duedate, b.Id });
             builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno");
-            builder.Entity<Book>().Property(b => b.Id).HasColumnName("isbn");
-            builder.Entity<BookCopy>().HasKey(b => b.isbn);
-            builder.Entity<BookCopy>().Property(b => b.itemno).HasColumnName("itemno");
             // Define a composite key for Isbnauthorid
             builder.Entity<Isbnauthorid>().HasKey(b => new { b.Id, b.authorid});
             builder.Entity<Isbnauthorid>().Property(b => b.Id).HasColumnName("isbn");

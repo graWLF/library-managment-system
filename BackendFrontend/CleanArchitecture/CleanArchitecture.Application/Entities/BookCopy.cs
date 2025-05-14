@@ -13,10 +13,8 @@ namespace CleanArchitecture.Core.Entities
     {
         [Column("itemno")]
         [Key]
-        public long itemno { get; set; }
-        [Column("isbn")]
+        public long Id { get; set; }
         public long isbn { get; set; }
-        [Column("location")]
         public string location { get; set; }
 
         [ForeignKey("isbn")]

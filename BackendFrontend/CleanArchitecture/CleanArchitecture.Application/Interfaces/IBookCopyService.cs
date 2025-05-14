@@ -10,9 +10,9 @@ namespace CleanArchitecture.Core.Interfaces
     public interface IBookCopyService
     {
         Task<IEnumerable<BookCopyDTO>> GetAllAsync();
-        Task<BookCopyDTO> GetByCompositeKeyAsync(long itemNo, long isbn);
+        Task<BookCopyDTO> GetByIdAsync(long Id);
         Task CreateAsync(BookCopyDTO dto);
-        Task UpdateAsync(long itemNo, long copyNo, BookCopyDTO dto);
-        Task DeleteAsync(long itemNo, long copyNo);
+        Task UpdateAsync(long Id, BookCopyDTO dto);
+        Task DeleteAsync(long Id);
     }
 }
