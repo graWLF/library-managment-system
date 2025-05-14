@@ -21,6 +21,8 @@ namespace CleanArchitecture.Core.Entities
 
         public Borrower Borrower { get; set; } // Related Borrower entity
         public Branch Branch { get; set; }
+        [ForeignKey(nameof(Id))]
+        public BookCopy BookCopy { get; set; } // Related BookCopy entity
     }
 
 

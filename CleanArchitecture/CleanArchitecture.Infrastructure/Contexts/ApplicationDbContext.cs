@@ -35,6 +35,7 @@ namespace CleanArchitecture.Infrastructure.Contexts
         public DbSet<Supervisor> supervisors { get; set; }
         public DbSet<Registration> registrations { get; set; }
         public DbSet<Isbnauthorid> isbnauthorids { get; set; }
+        public DbSet<BookCopy> BookCopies { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -75,6 +76,8 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Supervisor>().ToTable("supervisor");
             builder.Entity<Registration>().ToTable("registration");
             builder.Entity<Isbnauthorid>().ToTable("isbn_authorid");
+            builder.Entity<BookCopy>().ToTable("isbn_itemno");
+
 
             // Configure primary keys and identity columns if needed
             builder.Entity<Borrower>().Property(b => b.Id).HasColumnName("borrowerid").ValueGeneratedOnAdd();
@@ -85,9 +88,11 @@ namespace CleanArchitecture.Infrastructure.Contexts
             builder.Entity<Supervisor>().Property(s => s.Id).HasColumnName("supervisorid").ValueGeneratedOnAdd();
             builder.Entity<Registration>().Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
             // Define a composite key
-            builder.Entity<Borrowing>().HasKey(b => new { b.Id, b.borrowerid, b.borrowdate, b.duedate });
+            builder.Entity<Borrowing>().HasKey(b => new { b.borrowerid, b.borrowdate, b.duedate, b.Id });
             builder.Entity<Borrowing>().Property(b => b.Id).HasColumnName("itemno");
             builder.Entity<Book>().Property(b => b.Id).HasColumnName("isbn");
+            builder.Entity<BookCopy>().HasKey(b => b.isbn);
+            builder.Entity<BookCopy>().Property(b => b.itemno).HasColumnName("itemno");
             // Define a composite key for Isbnauthorid
             builder.Entity<Isbnauthorid>().HasKey(b => new { b.Id, b.authorid});
             builder.Entity<Isbnauthorid>().Property(b => b.Id).HasColumnName("isbn");

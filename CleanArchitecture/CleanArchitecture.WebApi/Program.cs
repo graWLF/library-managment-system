@@ -68,6 +68,8 @@ builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 builder.Services.AddScoped<IIsbnauthoridRepository, IsbnauthoridRepository>();
 builder.Services.AddScoped<IIsbnauthoridService, IsbnauthoridService>();
 
+builder.Services.AddScoped<IBookCopyRepository, BookCopyRepository>();
+builder.Services.AddScoped<IBookCopyService, BookCopyService>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 

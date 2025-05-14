@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CleanArchitecture.Core.DTOs.Author;
 using CleanArchitecture.Core.DTOs.Book;
+using CleanArchitecture.Core.DTOs.BookCopy;
 using CleanArchitecture.Core.DTOs.Borrower;
 using CleanArchitecture.Core.DTOs.Borrowing;
 using CleanArchitecture.Core.DTOs.Branch;
@@ -74,6 +75,10 @@ namespace CleanArchitecture.Core.Mappings
             CreateMap<Registration, RegistrationDTO>();
             CreateMap<RegistrationDTO, Registration>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+            // BookCopy
+            CreateMap<BookCopy, BookCopyDTO>();
+            CreateMap<BookCopyDTO, BookCopy>()
+                .ForMember(dest => dest.itemno, opt => opt.Ignore());
 
         }
     }
