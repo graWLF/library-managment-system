@@ -11,7 +11,6 @@ namespace CleanArchitecture.Core.Entities
     [Table("borrowing")]
     public class Borrowing
     {
-        [Key]
         [Column("itemno")]
         public long Id { get; set; }
         public long borrowerid { get; set; }

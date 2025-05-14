@@ -64,6 +64,11 @@ builder.Services.AddScoped<ISupervisorService, SupervisorService>();
 
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+
+builder.Services.AddScoped<IIsbnauthoridRepository, IsbnauthoridRepository>();
+builder.Services.AddScoped<IIsbnauthoridService, IsbnauthoridService>();
+
+
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 builder.Services.AddCors(options =>
