@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { searchBooks } from '@/api/services';
+import { searchBooks, searchBooksByIsbn } from '@/api/services';
 import BackButton from '../../components/BackButton';
 
 const SearchScreen = () => {
@@ -20,13 +20,25 @@ const SearchScreen = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const isIsbn = (text: string) => {
+    // Remove dashes and spaces, and check if it's all digits and 10 or 13 characters
+    const cleaned = text.replace(/[-\s]/g, '');
+    return /^\d{10}(\d{3})?$/.test(cleaned);
+  };
+
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setLoading(true);
     try {
-      const books = await searchBooks(query.trim());
-      setResults(books);
+      const trimmedQuery = query.trim();
+      const books = isIsbn(trimmedQuery)
+        ? await searchBooksByIsbn(trimmedQuery)
+        : await searchBooks(trimmedQuery);
+
+      // Normalize result to array for FlatList
+      const resultsArray = Array.isArray(books) ? books : [books];
+      setResults(resultsArray);
     } catch (error) {
       console.error('❌ Search Error:', error);
       setResults([]);
@@ -58,7 +70,7 @@ const SearchScreen = () => {
 
         <TextInput
           style={styles.input}
-          placeholder="Enter a book title"
+          placeholder="Enter book title or ISBN"
           placeholderTextColor="#aaa"
           value={query}
           onChangeText={setQuery}

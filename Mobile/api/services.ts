@@ -98,6 +98,17 @@ export const searchBooks = async (query: string) => {
     return [];
   }
 };
+export const searchBooksByIsbn = async (isbn: string) => {
+  console.log("🔎 Sending search request for:", isbn);
+  try {
+    const response = await axios.get(`${API_BASE_URL}/Book/${isbn}`)
+    console.log("📚 Search Response Received:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Search Error:", error.message);
+    return [];
+  }
+};
 
 export const fetchAndAddBookByISBN = async (isbn: string) => {
   const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${GOOGLE_BOOKS_API_KEY}`);
