@@ -1,16 +1,7 @@
-import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
+// app/(tabs)/index.tsx
+import React from 'react';
+import AddBookScreen from '../book/AddBook';
 
 export default function Index() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      router.replace('/welcome'); 
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  return null;
+  return <AddBookScreen />;
 }
