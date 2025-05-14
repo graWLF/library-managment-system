@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import API_BASE_URL from './apiConfig';
+import GOOGLE_BOOKS_API_KEY from './googleConfig';
 
 export const registerUser = async (userData: any) => {
   try {
@@ -98,7 +99,13 @@ export const searchBooks = async (query: string) => {
   }
 };
 
-
+export const fetchAndAddBookByISBN = async (isbn: string) => {
+  const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${GOOGLE_BOOKS_API_KEY}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch and add book from Google API");
+  }
+  return response.json(); 
+};
 
 
 export const addBook = async (bookData: any) => {
@@ -112,8 +119,8 @@ export const updateBook = async (isbn: string, bookData: any) => {
   return response.data;
 };
 
-// Kitap silme (DELETE - /api/Book/{isbn})
-export const deleteBook = async (isbn: string) => {
+
+export const deleteBook = async (isbn: number) => {
   const response = await axios.delete(`${API_BASE_URL}/Book/${isbn}`);
   return response.data;
 };

@@ -5,7 +5,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false, // Diğer sayfaların görünümünü bozmaz
+        headerShown: false,
         tabBarActiveTintColor: '#6a0dad',
         tabBarStyle: {
           backgroundColor: '#121212',
@@ -17,9 +17,9 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="BookEdit"
         options={{
-          title: 'Add Book',
+          title: 'Edit Book',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book-outline" size={size} color={color} />
           ),

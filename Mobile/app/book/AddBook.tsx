@@ -8,8 +8,10 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import BackButton from '../../components/BackButton';
 import { addBook } from '@/api/services';
+import { fetchAndAddBookByISBN } from '@/api/services';
+import API_BASE_URL from '@/api/apiConfig';
+import  GOOGLE_BOOKS_API_KEY from '@/api/googleConfig';
 
 const AddBookScreen = () => {
   const [selectedMethod, setSelectedMethod] = useState<'manual' | 'isbn' | 'barcode' | null>(null);
@@ -19,6 +21,7 @@ const AddBookScreen = () => {
   const [type, setType] = useState('');
   const [pages, setPages] = useState('');
   const [content, setContent] = useState('');
+  const [isbnInput, setIsbnInput] = useState('');
 
   const handleManualSubmit = async () => {
     if (!title || !category || !type || !pages || !content) {
@@ -27,7 +30,7 @@ const AddBookScreen = () => {
     }
 
     const newBook = {
-      id: Math.floor(Math.random() * 10000000000), // simulate ISBN
+      id: Math.floor(Math.random() * 10000000000),
       title,
       category,
       type,
@@ -51,6 +54,22 @@ const AddBookScreen = () => {
       Alert.alert('❌ Error adding book');
     }
   };
+
+  const handleIsbnSubmit = async () => {
+  if (!isbnInput.trim()) {
+    Alert.alert('Please enter an ISBN');
+    return;
+  }
+
+  try {
+    await fetchAndAddBookByISBN(isbnInput.trim() as string);
+    Alert.alert('✅ Book added successfully via Google API');
+    setIsbnInput('');
+  } catch (error) {
+    console.error('❌ Error:', error);
+    Alert.alert('❌ Book could not be added');
+  }
+};
 
   const renderForm = () => {
     switch (selectedMethod) {
@@ -85,9 +104,24 @@ const AddBookScreen = () => {
           </ScrollView>
         );
       case 'isbn':
-        return <Text style={styles.info}>ISBN Search Form will be implemented</Text>;
+        return (
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>Enter ISBN</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="ISBN"
+              value={isbnInput}
+              onChangeText={setIsbnInput}
+              keyboardType="numeric"
+              placeholderTextColor="#aaa"
+            />
+            <TouchableOpacity style={styles.button} onPress={handleIsbnSubmit}>
+              <Text style={styles.buttonText}>Fetch & Add Book</Text>
+            </TouchableOpacity>
+          </View>
+        );
       case 'barcode':
-        return <Text style={styles.info}>Barcode Scanner UI will be implemented</Text>;
+        return <Text style={styles.info}>📷 Barcode Scanner integration coming soon</Text>;
       default:
         return <Text style={styles.info}>Choose a method to add a book</Text>;
     }
@@ -95,7 +129,6 @@ const AddBookScreen = () => {
 
   return (
     <View style={styles.container}>
-      <BackButton />
       <Text style={styles.header}>Add a Book</Text>
 
       <View style={styles.methodSelector}>
