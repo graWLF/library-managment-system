@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using CleanArchitecture.Core.DTOs.Author;
 using CleanArchitecture.Core.DTOs.Book;
-using CleanArchitecture.Core.DTOs.BookCopy;
 using CleanArchitecture.Core.DTOs.Borrower;
 using CleanArchitecture.Core.DTOs.Borrowing;
 using CleanArchitecture.Core.DTOs.Branch;
-using CleanArchitecture.Core.DTOs.Isbnauthorid;
 using CleanArchitecture.Core.DTOs.Librarian;
 using CleanArchitecture.Core.DTOs.Publisher;
 using CleanArchitecture.Core.DTOs.Registration;
@@ -46,11 +44,6 @@ namespace CleanArchitecture.Core.Mappings
             CreateMap<BorrowingDTO, Borrowing>();
                 //.ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            // Isbnauthorid
-            CreateMap<Isbnauthorid, IsbnauthoridDTO>();
-            CreateMap<IsbnauthoridDTO, Isbnauthorid>();
-                //.ForMember(dest => dest.Id, opt => opt.Ignore());
-
             // Branch
             CreateMap<Branch, BranchDTO>();
             CreateMap<BranchDTO, Branch>()
@@ -75,10 +68,6 @@ namespace CleanArchitecture.Core.Mappings
             CreateMap<Registration, RegistrationDTO>();
             CreateMap<RegistrationDTO, Registration>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
-            // BookCopy
-            CreateMap<BookCopy, BookCopyDTO>();
-            CreateMap<BookCopyDTO, BookCopy>()
-                .ForMember(dest => dest.itemno, opt => opt.Ignore());
 
         }
     }

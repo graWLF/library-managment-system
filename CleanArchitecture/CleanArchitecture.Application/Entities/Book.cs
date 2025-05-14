@@ -38,7 +38,6 @@ namespace CleanArchitecture.Core.Entities
         public string dimensions { get; set; }
         public string material { get; set; }
         public string color { get; set; }
-        public ICollection<BookCopy> BookCopies { get; set; } // Navigation property to BookCopy
-
+        
     }
 }

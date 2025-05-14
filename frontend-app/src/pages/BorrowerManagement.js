@@ -4,7 +4,6 @@ import AddBorrowerForm from './AddBorrowerForm';
 import LendBookForm from './LendBookForm';
 import '../styles/BorrowerManagement.css';
 import BorrowingsList from './BorrowingsList';
-import { Link } from 'react-router-dom';
 
 function BorrowerManagement() {
   const [view, setView] = useState('list');
@@ -100,14 +99,12 @@ function BorrowerManagement() {
             className="search-input"
           />
           {error && <p className="error">{error}</p>}
-          <div style={{ overflowX: 'auto' }}>
           <table>
             <thead>
               <tr>
                 <th onClick={() => handleSort('id')}>ID</th>
                 <th onClick={() => handleSort('borrowerName')}>Name</th>
                 <th onClick={() => handleSort('borrowerPhone')}>Phone</th>
-                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -117,13 +114,6 @@ function BorrowerManagement() {
                     <td>{b.id}</td>
                     <td>{b.borrowerName}</td>
                     <td>{b.borrowerPhone}</td>
-                    <td>
-                      <Link to={`/admin/edit-borrower/${b.id}`}>
-                        <button title="Edit">
-                          Edit
-                        </button>
-                      </Link>
-                    </td>
                   </tr>
                 ))
               ) : (
@@ -131,7 +121,6 @@ function BorrowerManagement() {
               )}
             </tbody>
           </table>
-          </div>
           {/* Pagination */}
           <div className="pagination">
             {Array.from({ length: Math.ceil(filteredBorrowers.length / itemsPerPage) }, (_, i) => (

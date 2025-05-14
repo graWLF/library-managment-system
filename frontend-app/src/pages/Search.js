@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { fetchBookByName, fetchBookById } from '../api/Services';
 
 import '../styles/Search.css';
-import { Link } from 'react-router-dom';
 
 function Search() {
   const [bookName, setBookName] = useState('');
@@ -164,15 +163,9 @@ function Search() {
               </tr>
             </tbody>
           </table>
-          <Link to={`/admin/edit-book/${selectedBook.id}`}>
-          <button title="Edit">
-                  <span role="img" aria-label="edit">✏️</span>
-          </button>
-          </Link>
           <button onClick={() => setSelectedBook(null)} className="back-button">
             ← Back to list
           </button>
-          
         </div>
       )}
     </div>

@@ -11,9 +11,10 @@ namespace CleanArchitecture.Core.Entities
     [Table("borrowing")]
     public class Borrowing
     {
+        [Key]
         [Column("itemno")]
         public long Id { get; set; }
-        public long borrowerid { get; set; }
+        public int borrowerid { get; set; }
         public int branchid { get; set; }
         public String borrowdate { get; set; }
         public String duedate { get; set; }
@@ -21,8 +22,6 @@ namespace CleanArchitecture.Core.Entities
 
         public Borrower Borrower { get; set; } // Related Borrower entity
         public Branch Branch { get; set; }
-        [ForeignKey(nameof(Id))]
-        public BookCopy BookCopy { get; set; } // Related BookCopy entity
     }
 
 
