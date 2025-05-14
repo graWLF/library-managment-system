@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,31 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
+  Platform,
 } from 'react-native';
-import { addBook } from '@/api/services';
-import { fetchAndAddBookByISBN } from '@/api/services';
-import API_BASE_URL from '@/api/apiConfig';
-import  GOOGLE_BOOKS_API_KEY from '@/api/googleConfig';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Html5Qrcode } from 'html5-qrcode';
+import { addBook, fetchAndAddBookByISBN } from '@/api/services';
 
 const AddBookScreen = () => {
   const [selectedMethod, setSelectedMethod] = useState<'manual' | 'isbn' | 'barcode' | null>(null);
-
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [type, setType] = useState('');
   const [pages, setPages] = useState('');
   const [content, setContent] = useState('');
   const [isbnInput, setIsbnInput] = useState('');
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [scanned, setScanned] = useState(false);
+
+  useEffect(() => {
+    if (selectedMethod === 'barcode' && Platform.OS !== 'web') {
+      (async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === 'granted');
+      })();
+    }
+  }, [selectedMethod]);
 
   const handleManualSubmit = async () => {
     if (!title || !category || !type || !pages || !content) {
@@ -56,22 +66,62 @@ const AddBookScreen = () => {
   };
 
   const handleIsbnSubmit = async () => {
-  if (!isbnInput.trim()) {
-    Alert.alert('Please enter an ISBN');
-    return;
-  }
+    if (!isbnInput.trim()) {
+      Alert.alert('Please enter an ISBN');
+      return;
+    }
 
-  try {
-    const added = await fetchAndAddBookByISBN(isbnInput.trim());
-    console.log("✅ Book added:", added);
-    Alert.alert('✅ Book added successfully');
-    setIsbnInput('');
-  } catch (error) {
-    console.error('❌ ISBN Error:', error);
-    Alert.alert('❌ Failed to fetch/add book');
-  }
-};
+    try {
+      const added = await fetchAndAddBookByISBN(isbnInput.trim());
+      console.log('✅ Book added:', added);
+      Alert.alert('✅ Book added successfully');
+      setIsbnInput('');
+    } catch (error) {
+      console.error('❌ ISBN Error:', error);
+      Alert.alert('❌ Failed to fetch/add book');
+    }
+  };
 
+  const handleBarCodeScanned = async ({ type, data }: any) => {
+    setScanned(true);
+    console.log(`📦 Scanned ISBN: ${data}`);
+
+    if (!/^\d{10,13}$/.test(data)) {
+      Alert.alert('Invalid barcode format');
+      return;
+    }
+
+    try {
+      const result = await fetchAndAddBookByISBN(data);
+      console.log('✅ Book added:', result);
+      Alert.alert('✅ Book added via barcode');
+    } catch (error) {
+      console.error('❌ Barcode fetch/add error:', error);
+      Alert.alert('❌ Failed to add book from barcode');
+    }
+  };
+
+  const startWebQRScanner = () => {
+    const scanner = new Html5Qrcode('reader');
+    scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: 250 },
+      async (decodedText, decodedResult) => {
+        console.log('✅ Scanned (web):', decodedText);
+        Alert.alert('Scanned', decodedText);
+        scanner.stop();
+        try {
+          const result = await fetchAndAddBookByISBN(decodedText);
+          Alert.alert('✅ Book added via QR');
+        } catch (err) {
+          Alert.alert('❌ Failed to add book');
+        }
+      },
+      (errorMessage) => {
+        console.warn('Scan error:', errorMessage);
+      }
+    );
+  };
 
   const renderForm = () => {
     switch (selectedMethod) {
@@ -91,20 +141,14 @@ const AddBookScreen = () => {
             <TextInput style={styles.input} value={pages} onChangeText={setPages} placeholder="Enter number of pages" placeholderTextColor="#aaa" keyboardType="numeric" />
 
             <Text style={styles.label}>Description</Text>
-            <TextInput
-              style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-              multiline
-              value={content}
-              onChangeText={setContent}
-              placeholder="Enter description"
-              placeholderTextColor="#aaa"
-            />
+            <TextInput style={[styles.input, { height: 100, textAlignVertical: 'top' }]} multiline value={content} onChangeText={setContent} placeholder="Enter description" placeholderTextColor="#aaa" />
 
             <TouchableOpacity style={styles.button} onPress={handleManualSubmit}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </ScrollView>
         );
+
       case 'isbn':
         return (
           <View style={styles.formContainer}>
@@ -122,8 +166,41 @@ const AddBookScreen = () => {
             </TouchableOpacity>
           </View>
         );
+
       case 'barcode':
-        return <Text style={styles.info}>📷 Barcode Scanner integration coming soon</Text>;
+        if (Platform.OS === 'web') {
+          return (
+            <View style={styles.formContainer}>
+              <Text style={styles.label}>Web QR Scan</Text>
+              <View id="reader" style={{ width: '100%', height: 400, marginBottom: 10 }} />
+              <TouchableOpacity style={styles.button} onPress={startWebQRScanner}>
+                <Text style={styles.buttonText}>Start QR Scan</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+
+        if (hasPermission === null) {
+          return <Text style={styles.info}>Requesting camera permission...</Text>;
+        }
+        if (hasPermission === false) {
+          return <Text style={styles.info}>No access to camera</Text>;
+        }
+
+        return (
+          <View style={{ flex: 1 }}>
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={{ flex: 1 }}
+            />
+            {scanned && (
+              <TouchableOpacity style={styles.button} onPress={() => setScanned(false)}>
+                <Text style={styles.buttonText}>Scan Again</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        );
+
       default:
         return <Text style={styles.info}>Choose a method to add a book</Text>;
     }
