@@ -62,14 +62,16 @@ const AddBookScreen = () => {
   }
 
   try {
-    await fetchAndAddBookByISBN(isbnInput.trim() as string);
-    Alert.alert('✅ Book added successfully via Google API');
+    const added = await fetchAndAddBookByISBN(isbnInput.trim());
+    console.log("✅ Book added:", added);
+    Alert.alert('✅ Book added successfully');
     setIsbnInput('');
   } catch (error) {
-    console.error('❌ Error:', error);
-    Alert.alert('❌ Book could not be added');
+    console.error('❌ ISBN Error:', error);
+    Alert.alert('❌ Failed to fetch/add book');
   }
 };
+
 
   const renderForm = () => {
     switch (selectedMethod) {

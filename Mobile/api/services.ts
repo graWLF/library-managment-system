@@ -101,10 +101,33 @@ export const searchBooks = async (query: string) => {
 
 export const fetchAndAddBookByISBN = async (isbn: string) => {
   const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${GOOGLE_BOOKS_API_KEY}`);
+
   if (!response.ok) {
-    throw new Error("Failed to fetch and add book from Google API");
+    throw new Error("❌ Failed to fetch book from Google API");
   }
-  return response.json(); 
+
+  const data = await response.json();
+
+  if (!data.title) {
+    throw new Error("❌ Book data incomplete or not found");
+  }
+
+  const newBook = {
+    id: Number(isbn), // veya data.id varsa o
+    title: data.title,
+    category: data.category || 'Unknown',
+    type: data.type || 'Book',
+    pages: data.pages || 0,
+    format: 'Google',
+    releaseDate: data.releaseDate || '',
+    publisherId: 1,
+    content: data.content || 'No description available',
+  };
+
+  // POST işlemi: veritabanına kitap ekleme
+  await addBook(newBook);
+
+  return newBook;
 };
 
 
