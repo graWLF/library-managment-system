@@ -126,6 +126,51 @@ export async function createBorrower(data) {
     if (!response.ok) throw new Error('Failed to fetch borrowings');
     return await response.json();
   };
-  
+
+  export const fetchLibrarians = async () => {
+    const response = await fetch(`${API_BASE_URL}/librarian`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch librarians");
+    }
+    return response.json();
+}
+export const fetchLibrarianById = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/librarian/${id}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch librarian");
+    }
+    return response.json();
+}
+export const updateLibrarian = async (id, librarian) => {
+    const response = await fetch(`${API_BASE_URL}/librarian/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(librarian),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update librarian");
+    }
+    return response.json();
+};
+export const deleteLibrarian = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/librarian/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete librarian");
+    }
+};
+export const createLibrarian = async (librarian) => {
+    const response = await fetch(`${API_BASE_URL}/librarian`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(librarian),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to create librarian");
+    }
+    return response.json();
+};
+
   
   

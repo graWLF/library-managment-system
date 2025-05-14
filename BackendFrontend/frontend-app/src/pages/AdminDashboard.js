@@ -15,7 +15,9 @@ function AdminDashboard() {
         <Link to="/admin/add-book">
           <button>Add Book</button>
         </Link>
+        <link to="/admin/librarian-managment">
         <button>Librarian</button>
+        </link>
         <button>Supervisor</button>
         <Link to="/admin/borrowers">
           <button>BorrowerManagement</button>

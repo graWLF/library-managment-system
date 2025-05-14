@@ -9,6 +9,7 @@ import Layout from './Layout';
 import AddBook from './pages/AddBook';
 import EditBook from './pages/EditBook';
 import EditBorrower from './pages/EditBorrower';
+import LibrarianManagment from './pages/LibrarianManagment';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,6 +32,7 @@ function App() {
         <Route path="/admin/add-book" element={<AddBook />} />
         <Route path="/admin/edit-book/:id" element={<EditBook />} />
         <Route path="/admin/edit-borrower/:id" element={<EditBorrower />} />
+        <Route path="/admin/librarian-managment" element={<LibrarianManagment />} />
       </Routes>
     </Router>
   );
