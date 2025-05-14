@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Core.DTOs.Book;
+using System;
 
 namespace WebAPI.Controllers
 {
@@ -23,6 +24,21 @@ namespace WebAPI.Controllers
             var result = await _bookService.GetAllAsync();
             return Ok(result);
         }
+        [HttpGet("{isbn}/{apiKey}")]
+        public async Task<IActionResult> SearchBookWeb(string isbn, string apiKey)
+        {
+            try
+            {
+                var book = await _bookService.SearchBookAsync(isbn, apiKey);
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                // Log the error here
+                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace });
+            }
+        }
+
 
         [HttpGet("{isbn}")]
         public async Task<IActionResult> GetByISBN(long isbn)
