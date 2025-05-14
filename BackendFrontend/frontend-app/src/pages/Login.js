@@ -29,9 +29,9 @@ function Login() {
           body: JSON.stringify(formData),
         });
         if (roleResponse.status === 200) {
-          navigate('/adminSupervisor'); // ✅ Success: redirect to admin page
+          navigate('/admin'); // ✅ Success: redirect to admin page
         } else {
-          navigate('/adminLibrarian'); // ✅ Success: redirect to adminLibrarian page
+          navigate('/librarian'); // ✅ Success: redirect to adminLibrarian page
         }
 
         // navigate('/admin'); // ✅ Success: redirect to search page

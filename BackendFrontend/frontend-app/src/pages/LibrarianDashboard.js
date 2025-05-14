@@ -12,14 +12,11 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <div className="sidebar">
-        <Link to="/admin/add-book">
+        <Link to="/librarian/add-book">
           <button>Add Book</button>
         </Link>
-        <Link to="/admin/librarian-managment">
-        <button>Librarian</button>
-        </Link>
-        <button>Supervisor</button>
-        <Link to="/admin/borrowers">
+       
+        <Link to="/librarian/borrowers">
           <button>BorrowerManagement</button>
         </Link>
         <button 
