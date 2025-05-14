@@ -61,6 +61,13 @@ namespace CleanArchitecture.Infrastructure.Services
 
             await _repository.DeleteAsync(registration);
         }
+        // Check supervisor
+        public bool CheckSupervisor(string username, string password)
+        {
+            bool registration = _repository.CheckSupervisor(username, password);
+            return registration;
+
+        }
 
         // Login a registration
         public bool Login(string username, string password)

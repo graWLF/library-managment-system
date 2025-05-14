@@ -43,6 +43,20 @@ namespace CleanArchitecture.Infrastructure.Repositories
             _context.registrations.Remove(registration);
             await _context.SaveChangesAsync();
         }
+        public bool CheckSupervisor(string username, string password)
+        {
+            // check if the user is a supervisor which means has authLevel 2
+            IEnumerable<Registration> registrations = GetAllAsync().Result;
+            foreach (var registration in registrations)
+            {
+                if ((registration.Username == username && registration.Password == password && registration.AuthLevel == 2) ||
+                    (registration.Email == username && registration.Password == password && registration.AuthLevel == 2))
+                {
+                    return true; // Login successful
+                }
+            }
+            return false; // Login failed
+        }
         public bool Login(string username, string password)
         {
             // Get all user credentials
