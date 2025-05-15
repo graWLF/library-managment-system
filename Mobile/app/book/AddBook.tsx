@@ -115,14 +115,14 @@ const AddBookScreen = () => {
             </TouchableOpacity>
           </View>
         );
-
+      /*  
       case 'barcode':
         return (
           <View style={styles.formContainer}>
             <WebBarcodeScanner onDetected={(code) => handleIsbnSubmit(code)} />
           </View>
         );
-
+      */
       default:
         return <Text style={styles.info}>Choose a method to add a book</Text>;
     }
@@ -138,9 +138,6 @@ const AddBookScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => setSelectedMethod('isbn')}>
           <Text style={styles.buttonText}>Add by ISBN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => setSelectedMethod('barcode')}>
-          <Text style={styles.buttonText}>Scan Barcode</Text>
         </TouchableOpacity>
       </View>
 

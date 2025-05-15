@@ -1,42 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import axios from 'axios';
-import API_BASE_URL from '@/api/apiConfig';
+// app/(tabs)/profile.tsx
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const ProfileScreen = () => {
-  const [userData, setUserData] = useState<any>(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log("➡️ Kullanıcı Bilgileri İsteniyor...");
-        const response = await axios.get(`${API_BASE_URL}/Registration`);
-        console.log("✅ Kullanıcı Bilgileri Geldi:", response.data);
-
-        // Gelen yanıtı kaydedelim:
-        if (response.data) {
-          setUserData(response.data);
-        }
-      } catch (error: any) {  // <-- Burada any olarak belirttim
-        console.error("❌ Kullanıcı Bilgileri Alınamadı:", error.message);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const handleLogout = () => {
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to log out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Log Out',
+          style: 'destructive',
+          onPress: () => {
+            // Oturum kapatma işlemleri gerekiyorsa burada yapılabilir
+            router.replace('../../welcome');
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <View style={styles.container}>
-      {userData ? (
-        <>
-          <Text style={styles.title}>Merhaba, {userData.username}!</Text>
-          <Text style={styles.info}>Email: {userData.email}</Text>
-          <Text style={styles.info}>Name: {userData.name}</Text>
-          <Text style={styles.info}>Lastname: {userData.lastname}</Text>
-        </>
-      ) : (
-        <Text style={styles.info}>Yükleniyor...</Text>
-      )}
+      <Text style={styles.header}>Profile</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.label}>Username:</Text>
+        <Text style={styles.value}>demo_user</Text>
+
+        <Text style={styles.label}>Email:</Text>
+        <Text style={styles.value}>demo@example.com</Text>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Log Out</Text>
+      </TouchableOpacity>
+
+      <View style={styles.infoSection}>
+        <Text style={styles.infoTitle}>About Us</Text>
+        <Text style={styles.infoText}>
+          Lib++ is a simple digital library system built for modern book
+          management.
+        </Text>
+
+        <Text style={styles.infoTitle}>Privacy Policy</Text>
+        <Text style={styles.infoText}>
+          We do not store any personal data. This app is for educational
+          purposes only.
+        </Text>
+      </View>
     </View>
   );
 };
@@ -44,19 +61,58 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#181818',
+    paddingHorizontal: 24,
+    paddingTop: 60,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#6a0dad',
+  header: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#B266FF',
+    marginBottom: 20,
+    textAlign: 'center',
   },
-  info: {
+  card: {
+    backgroundColor: '#2c2c2c',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 30,
+  },
+  label: {
+    color: '#888',
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  value: {
+    color: '#fff',
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  button: {
+    backgroundColor: '#6a0dad',
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  infoSection: {
+    marginTop: 10,
+  },
+  infoTitle: {
+    color: '#B266FF',
     fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 6,
+  },
+  infoText: {
     color: '#ccc',
-    marginVertical: 5,
+    fontSize: 14,
+    marginBottom: 20,
   },
 });
 
