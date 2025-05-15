@@ -31,44 +31,7 @@ function AddBook() {
   const [color, setColor] = useState("");
   const [isbnSearch, setIsbnSearch] = useState("");
 
-   const handleGoogleAdd = async () => {
-    try {
-      const apiKey = "YOURGOOGLEBOOKAPI"; // Replace with your actual API key if needed
-      const response = await fetch(`http://localhost:5000/api/Book/${isbnSearch}/${apiKey}`);
-      const book = response.data;
-
-      // Fill the form fields with the fetched book data
-      setId(book.Id);
-      setLocalIsbn(book.local_isbn);
-      setType(book.type);
-      setTitle(book.title);
-      setCategory(book.category);
-      setAdditiondate(book.additiondate);
-      setContent(book.content);
-      setInfourl(book.infourl);
-      setContentlanguage(book.contentlanguage);
-      setContentsource(book.contentsource);
-      setImage(book.image);
-      setPrice(book.price);
-      setDuration(book.duration);
-      setContentlink(book.contentlink);
-      setLibrarianid(book.librarianid);
-
-      setFormat(book.format);
-      setPublishingstatus(book.publishingstatus);
-      setReleasedate(book.releasedate);
-      setPublisherid(book.publisherid);
-      setPages(book.pages);
-      setWeight(book.weight);
-      setDimensions(book.dimensions);
-      setMaterial(book.material);
-      setColor(book.color);
-      // Set the message to indicate success
-      setMessage("Book data loaded from Google!");
-    } catch (error) {
-      setMessage("Book not found or error fetching from Google.");
-    }
-  };
+   
 
 
   const handleSubmit = async (e) => {
@@ -131,21 +94,51 @@ function AddBook() {
       setMessage('Error: ' + error.message);
     }
   };
+  const handleGoogleAdd = async () => {
+    try {
+      const apiKey = "YOURGOOGLEBOOKAPI"; // Replace with your actual API key if needed
+      const response = await fetch(`http://localhost:5000/api/Book/${isbnSearch}/${apiKey}`);
+      const book = response.data;
+
+      // Fill the form fields with the fetched book data
+      setId(book.Id);
+      setLocalIsbn(book.local_isbn);
+      setType(book.type);
+      setTitle(book.title);
+      setCategory(book.category);
+      setAdditiondate(book.additiondate);
+      setContent(book.content);
+      setInfourl(book.infourl);
+      setContentlanguage(book.contentlanguage);
+      setContentsource(book.contentsource);
+      setImage(book.image);
+      setPrice(book.price);
+      setDuration(book.duration);
+      setContentlink(book.contentlink);
+      setLibrarianid(book.librarianid);
+
+      setFormat(book.format);
+      setPublishingstatus(book.publishingstatus);
+      setReleasedate(book.releasedate);
+      setPublisherid(book.publisherid);
+      setPages(book.pages);
+      setWeight(book.weight);
+      setDimensions(book.dimensions);
+      setMaterial(book.material);
+      setColor(book.color);
+      // Set the message to indicate success
+      setMessage("Book data loaded from Google!");
+    } catch (error) {
+      setMessage("Book not found or error fetching from Google.");
+    }
+  };
 
   return (
     <div>
       <h2>Add Book</h2>
-      <div style={{ marginBottom: 16 }}>
-        <input
-          type="text"
-          placeholder="Enter ISBN"
-          value={isbnSearch}
-          onChange={e => setIsbnSearch(e.target.value)}
-        />
-        <button type="button" onClick={handleGoogleAdd}>
-          Add by Google
-        </button>
-      </div>
+      
+
+      
       <form onSubmit={handleSubmit}>
         <div className="form-grid">
           <div>
