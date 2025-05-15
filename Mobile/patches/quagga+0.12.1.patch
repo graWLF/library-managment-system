@@ -1,0 +1,18 @@
+diff --git a/node_modules/quagga/lib/quagga.js b/node_modules/quagga/lib/quagga.js
+index e92d19e..71b1c82 100644
+--- a/node_modules/quagga/lib/quagga.js
++++ b/node_modules/quagga/lib/quagga.js
+@@ -4808,11 +4808,11 @@ exports.__esModule = true;
+ var config = void 0;
+ 
+ if (false) {
+-    config = require('./config.dev.js');
++    config = {};
+ } else if (true) {
+     config = __webpack_require__(58);
+ } else {
+-    config = require('./config.prod.js');
++    config = {};
+ }
+ 
+ exports.default = config;

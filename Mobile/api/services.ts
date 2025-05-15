@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import API_BASE_URL from './apiConfig';
+import GOOGLE_BOOKS_API_KEY from './googleConfig';
 
 export const registerUser = async (userData: any) => {
   try {
@@ -87,8 +88,8 @@ export const fetchBookByISBN = async (isbn: string) => {
 export const searchBooks = async (query: string) => {
   console.log("🔎 Sending search request for:", query);
   try {
-    const response = await axios.get(`/api/Book/search`, {
-      params: { query },
+    const response = await axios.get(`${API_BASE_URL}/Book/search`, {
+      params: { name: query }, // ✅ backend'in istediği parametre ismi
     });
     console.log("📚 Search Response Received:", response.data);
     return response.data;
@@ -96,6 +97,48 @@ export const searchBooks = async (query: string) => {
     console.error("❌ Search Error:", error.message);
     return [];
   }
+};
+export const searchBooksByIsbn = async (isbn: string) => {
+  console.log("🔎 Sending search request for:", isbn);
+  try {
+    const response = await axios.get(`${API_BASE_URL}/Book/${isbn}`)
+    console.log("📚 Search Response Received:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Search Error:", error.message);
+    return [];
+  }
+};
+
+export const fetchAndAddBookByISBN = async (isbn: string) => {
+  const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${GOOGLE_BOOKS_API_KEY}`);
+
+  if (!response.ok) {
+    throw new Error("❌ Failed to fetch book from Google API");
+  }
+
+  const data = await response.json();
+
+  if (!data.title) {
+    throw new Error("❌ Book data incomplete or not found");
+  }
+
+  const newBook = {
+    id: Number(isbn), // veya data.id varsa o
+    title: data.title,
+    category: data.category || 'Unknown',
+    type: data.type || 'Book',
+    pages: data.pages || 0,
+    format: 'Google',
+    releaseDate: data.releaseDate || '',
+    publisherId: 1,
+    content: data.content || 'No description available',
+  };
+
+  // POST işlemi: veritabanına kitap ekleme
+  await addBook(newBook);
+
+  return newBook;
 };
 
 
@@ -110,8 +153,8 @@ export const updateBook = async (isbn: string, bookData: any) => {
   return response.data;
 };
 
-// Kitap silme (DELETE - /api/Book/{isbn})
-export const deleteBook = async (isbn: string) => {
+
+export const deleteBook = async (isbn: number) => {
   const response = await axios.delete(`${API_BASE_URL}/Book/${isbn}`);
   return response.data;
 };
