@@ -11,6 +11,7 @@ import EditBook from './pages/EditBook';
 import EditBorrower from './pages/EditBorrower';
 import LibrarianManagment from './pages/LibrarianManagment';
 import LibrariranDashboard from './pages/LibrarianDashboard';
+import ProtectedRoute from './api/Services';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,13 +29,23 @@ function App() {
             )
           }
         />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+          
+          
+          } />
         <Route path="/admin/borrowers" element={<BorrowerManagement />} />
         <Route path="/admin/add-book" element={<AddBook />} />
         <Route path="/admin/edit-book/:id" element={<EditBook />} />
         <Route path="/admin/edit-borrower/:id" element={<EditBorrower />} />
         <Route path="/admin/librarian-managment" element={<LibrarianManagment />} />
-        <Route path="/librarian" element={<LibrariranDashboard />} />
+        <Route path="/librarian" element={
+          <ProtectedRoute>
+          <LibrariranDashboard />
+          </ProtectedRoute>
+          } />
         <Route path="/librarian/borrowers" element={<BorrowerManagement />} />
         <Route path="/librarian/add-book" element={<AddBook />} />
         <Route path="/librarian/edit-book/:id" element={<EditBook />} />

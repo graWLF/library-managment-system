@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
 function Login() {
+  localStorage.setItem('isAuthenticated', 'false');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
@@ -28,9 +29,12 @@ function Login() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         });
+        
         if (roleResponse.status === 200) {
+          localStorage.setItem('isAuthenticated', 'true');
           navigate('/admin'); // ✅ Success: redirect to admin page
         } else {
+          localStorage.setItem('isAuthenticated', 'true');
           navigate('/librarian'); // ✅ Success: redirect to adminLibrarian page
         }
 
