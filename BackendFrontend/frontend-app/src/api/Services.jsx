@@ -1,5 +1,7 @@
 // src/services/bookService.js
 import API_BASE_URL from "./config.js";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 export const fetchBooks = async () => {
     const response = await fetch(`${API_BASE_URL}/book`);
@@ -171,6 +173,14 @@ export const createLibrarian = async (librarian) => {
     }
     return response.json();
 };
+function ProtectedRoute({ children }) {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  } return children;
+}
+
+export default ProtectedRoute;
 
   
   
