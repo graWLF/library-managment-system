@@ -8,8 +8,8 @@ namespace CleanArchitecture.Core.DTOs.BookCopy
 {
     public class BookCopyDTO
     {
-        public long itemno { get; set; }
-        public long isbn { get; set; }
-        public string location { get; set; }
+        public long Id { get; set; }
+        public long Isbn { get; set; }
+        public string Location { get; set; }
     }
 }

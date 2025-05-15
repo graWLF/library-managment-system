@@ -77,6 +77,18 @@ namespace CleanArchitecture.WebApi.Controllers
 
             return Ok("Login successful.");
         }
+        // method to check if it is supervisor the authLevel 2
+        [HttpPost("checkSupervisor")]
+        public async Task<IActionResult> CheckSupervisor([FromBody] LoginRequestDTO loginRequest)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await Task.Run(() => _registrationService.CheckSupervisor(loginRequest.Username, loginRequest.Password));
+            if (!result || result == false)
+                return Unauthorized("Unauthorized.");
+            return Ok("Supervisor login successful.");
+        }
+
     }
     public class LoginRequestDTO
     {

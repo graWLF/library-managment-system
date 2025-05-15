@@ -9,6 +9,8 @@ import Layout from './Layout';
 import AddBook from './pages/AddBook';
 import EditBook from './pages/EditBook';
 import EditBorrower from './pages/EditBorrower';
+import LibrarianManagment from './pages/LibrarianManagment';
+import LibrariranDashboard from './pages/LibrarianDashboard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,6 +33,12 @@ function App() {
         <Route path="/admin/add-book" element={<AddBook />} />
         <Route path="/admin/edit-book/:id" element={<EditBook />} />
         <Route path="/admin/edit-borrower/:id" element={<EditBorrower />} />
+        <Route path="/admin/librarian-managment" element={<LibrarianManagment />} />
+        <Route path="/librarian" element={<LibrariranDashboard />} />
+        <Route path="/librarian/borrowers" element={<BorrowerManagement />} />
+        <Route path="/librarian/add-book" element={<AddBook />} />
+        <Route path="/librarian/edit-book/:id" element={<EditBook />} />
+        <Route path="/librarian/edit-borrower/:id" element={<EditBorrower />} />
       </Routes>
     </Router>
   );

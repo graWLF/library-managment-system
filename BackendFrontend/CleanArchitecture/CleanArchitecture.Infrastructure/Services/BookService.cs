@@ -121,9 +121,15 @@ namespace CleanArchitecture.Infrastructure.Services
                                 .FirstOrDefault(id => id["type"]?.ToString() == "ISBN_13")?["identifier"]?.ToString();
 
                 if (!string.IsNullOrEmpty(isbn13))
+                {
                     dto.Local_isbn = isbn13;
+                    dto.Id = long.Parse(isbn13);
+                }
                 else if (!string.IsNullOrEmpty(isbn10))
+                {
                     dto.Local_isbn = isbn10;
+                    dto.Id = long.Parse(isbn10);
+                }
             }
 
             // Parse Page Count

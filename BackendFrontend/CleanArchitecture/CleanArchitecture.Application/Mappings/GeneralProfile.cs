@@ -77,8 +77,8 @@ namespace CleanArchitecture.Core.Mappings
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
             // BookCopy
             CreateMap<BookCopy, BookCopyDTO>();
-            CreateMap<BookCopyDTO, BookCopy>()
-                .ForMember(dest => dest.itemno, opt => opt.Ignore());
+            CreateMap<BookCopyDTO, BookCopy>();
+                //.ForMember(dest => dest.Id, opt => opt.Ignore());
 
         }
     }

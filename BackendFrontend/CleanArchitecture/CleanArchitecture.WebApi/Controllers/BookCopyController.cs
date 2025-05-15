@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Core.DTOs.BookCopy;
 using CleanArchitecture.Core.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -22,30 +23,32 @@ namespace CleanArchitecture.WebApi.Controllers
             var result = await _bookCopyService.GetAllAsync();
             return Ok(result);
         }
-        [HttpGet("{itemNo}/{isbn}")]
-        public async Task<IActionResult> GetByCompositeKey(long itemNo, long isbn)
+
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetByID(long Id)
         {
-            var result = await _bookCopyService.GetByCompositeKeyAsync(itemNo, isbn);
-            if (result == null) return NotFound();
+            var result = await _bookCopyService.GetByIdAsync(Id);
             return Ok(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BookCopyDTO dto)
         {
             await _bookCopyService.CreateAsync(dto);
             return Ok();
         }
-        [HttpPut("{itemNo}/{isbn}")]
 
-        public async Task<IActionResult> Update(long itemNo, long copyNo, [FromBody] BookCopyDTO dto)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> Update(long Id, [FromBody] BookCopyDTO dto)
         {
-            await _bookCopyService.UpdateAsync(itemNo, copyNo, dto);
+            await _bookCopyService.UpdateAsync(Id, dto);
             return Ok();
         }
-        [HttpDelete("{itemNo}/{isbn}")]
-        public async Task<IActionResult> Delete(long itemNo, long copyNo)
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(long Id)
         {
-            await _bookCopyService.DeleteAsync(itemNo, copyNo);
+            await _bookCopyService.DeleteAsync(Id);
             return Ok();
         }
     }

@@ -22,7 +22,19 @@ function Login() {
       });
 
       if (response.status === 200) {
-        navigate('/admin'); // ✅ Success: redirect to search page
+        // post to check supervisor role
+        const roleResponse = await fetch('http://localhost:5000/api/Registration/checkSupervisor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (roleResponse.status === 200) {
+          navigate('/admin'); // ✅ Success: redirect to admin page
+        } else {
+          navigate('/librarian'); // ✅ Success: redirect to adminLibrarian page
+        }
+
+        // navigate('/admin'); // ✅ Success: redirect to search page
       } else if (response.status === 401) {
         setError('Invalid username or password'); // ❌ Wrong credentials
       } else {

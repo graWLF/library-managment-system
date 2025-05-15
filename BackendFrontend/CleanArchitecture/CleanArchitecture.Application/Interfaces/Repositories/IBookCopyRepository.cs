@@ -10,7 +10,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
     public interface IBookCopyRepository
     {
         Task<IEnumerable<BookCopy>> GetAllAsync();
-        Task<BookCopy> GetByCompositeKeyAsync(long itemno, long isbn);
+        Task<BookCopy> GetByIdAsync(long Id);
         Task AddAsync(BookCopy bookCopy);
         Task UpdateAsync(BookCopy bookCopy);
         Task DeleteAsync(BookCopy bookCopy);

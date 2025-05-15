@@ -18,5 +18,6 @@ namespace CleanArchitecture.Core.Interfaces
 
         // login
         bool Login(string username, string password);
+        bool CheckSupervisor(string username, string password);
     }
 }

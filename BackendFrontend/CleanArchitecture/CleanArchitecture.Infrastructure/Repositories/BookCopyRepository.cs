@@ -22,11 +22,9 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             return await _context.BookCopies.ToListAsync();
         }
-        public async Task<BookCopy> GetByCompositeKeyAsync(long itemNo, long isbn)
+        public async Task<BookCopy> GetByIdAsync(long Id)
         {
-            return await _context.BookCopies.FirstOrDefaultAsync(b =>
-                b.itemno == itemNo &&
-                b.isbn == isbn);
+            return await _context.BookCopies.FindAsync(Id);
         }
         public async Task AddAsync(BookCopy bookCopy)
         {
