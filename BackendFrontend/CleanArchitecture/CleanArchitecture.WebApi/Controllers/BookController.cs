@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Core.Interfaces;
 using CleanArchitecture.Core.DTOs.Book;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAPI.Controllers
 {
@@ -16,6 +17,57 @@ namespace WebAPI.Controllers
         public BookController(IBookService bookService)
         {
             _bookService = bookService;
+        }
+        public class Base64ImageRequest
+        {
+            public string ImageBase64 { get; set; } = string.Empty;
+        }
+
+        [HttpPost("extract-isbn-base64")]
+        public async Task<IActionResult> ScanBarcode([FromBody] Base64ImageRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ImageBase64))
+                return BadRequest("Image is required.");
+
+            var result = await _bookService.ScanBarcodePathAsync(request.ImageBase64);
+            return Ok(new { barcode = result });
+        }
+
+
+        [HttpPost("extract-isbn-path")]
+        public async Task<IActionResult> ScanBarcode(string path)
+        {
+            if (path == null || path.Length == 0)
+                return BadRequest("Image is required.");
+            try
+            {
+                var result = await _bookService.ScanBarcodePathAsync(path);
+                if (string.IsNullOrWhiteSpace(result))
+                    return NotFound("No barcode found.");
+                return Ok(new { barcode = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace });
+            }
+        }
+
+        [HttpPost("extract-isbn")]
+        public async Task<IActionResult> ScanBarcode(IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+                return BadRequest("Image is required.");
+            try
+            {
+                var result = await _bookService.ScanBarcodeAsync(image);
+                if (string.IsNullOrWhiteSpace(result))
+                    return NotFound("No barcode found.");
+                return Ok(new { barcode = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace });
+            }
         }
 
         [HttpGet]

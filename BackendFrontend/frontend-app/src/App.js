@@ -11,6 +11,7 @@ import EditBook from './pages/EditBook';
 import EditBorrower from './pages/EditBorrower';
 import LibrarianManagment from './pages/LibrarianManagment';
 import LibrariranDashboard from './pages/LibrarianDashboard';
+import UploadBarcodeImage from './pages/UploadBarcodeImage';
 import ProtectedRoute from './api/Services';
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           } />
         <Route path="/librarian/borrowers" element={<BorrowerManagement />} />
         <Route path="/librarian/add-book" element={<AddBook />} />
+        <Route path="/librarian/upload-barcode" element={<UploadBarcodeImage />} />
         <Route path="/librarian/edit-book/:id" element={<EditBook />} />
         <Route path="/librarian/edit-borrower/:id" element={<EditBorrower />} />
       </Routes>
