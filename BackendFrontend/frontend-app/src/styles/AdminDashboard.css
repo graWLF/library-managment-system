@@ -1,32 +1,66 @@
 .admin-dashboard {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .sidebar {
-    width: 10%;
-    background-color: #f4f4f4;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .sidebar button {
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .sidebar button:hover {
-    background-color: #0056b3;
-  }
-  
-  .content {
-    width: 80%;
-    padding: 20px;
-  }
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 240px;
+  background-color: #1e293b; /* Slate-800 */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 15px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Buttons inside nav */
+.sidebar button {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  background-color: #3b82f6; /* blue-500 */
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar button:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+/* Logout button at bottom */
+.logout-button {
+  background-color: #ef4444; /* red-500 */
+  margin-top: 40px;
+}
+
+.logout-button:hover {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Main content */
+.content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background-color: #f1f5f9;
+}

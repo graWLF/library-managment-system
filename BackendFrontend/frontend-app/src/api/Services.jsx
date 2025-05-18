@@ -1,5 +1,5 @@
 // src/services/bookService.js
-import API_BASE_URL from "./config.js";
+import {API_BASE_URL} from "./config.js";
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -181,6 +181,4 @@ function ProtectedRoute({ children }) {
 }
 
 export default ProtectedRoute;
-
-  
   

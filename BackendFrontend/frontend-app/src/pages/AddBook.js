@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { postBook } from '../api/Services'; 
 import '../styles/AddBook.css';
+import { GOOGLE_API_KEY } from '../api/config'; // Import the API key from config.js
 //import axios from 'axios';
 
 function AddBook() {
@@ -96,8 +97,7 @@ function AddBook() {
   };
   const handleGoogleAdd = async () => {
     try {
-      const apiKey = "YOURGOOGLEBOOKAPI"; // Replace with your actual API key if needed
-      const response = await fetch(`http://localhost:5000/api/Book/${isbnSearch}/${apiKey}`);
+      const response = await fetch(`http://localhost:5000/api/Book/${isbnSearch}/${GOOGLE_API_KEY}`);
       const book = response.data;
 
       // Fill the form fields with the fetched book data
