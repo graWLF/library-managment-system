@@ -1,8 +1,8 @@
 // src/api/authService.js
-const API_BASE_URL = 'http://localhost:5000/api/Registration';
+import { API_BASE_URL } from './config'; // Adjust the import path as necessary
 
 export const loginUser = async (credentials) => {
-  const response = await fetch(`${API_BASE_URL}/login`, {
+  const response = await fetch(`${API_BASE_URL}/Registration/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

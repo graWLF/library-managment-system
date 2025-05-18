@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../api/config';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
@@ -17,14 +18,14 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/Registration/login', {
+      const response = await fetch(`${API_BASE_URL}/Registration/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (response.status === 200) {
-        const roleResponse = await fetch('http://localhost:5000/api/Registration/checkSupervisor', {
+        const roleResponse = await fetch(`${API_BASE_URL}/Registration/checkSupervisor`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
