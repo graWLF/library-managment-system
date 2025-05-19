@@ -154,7 +154,8 @@ export const updateBook = async (isbn: string, bookData: any) => {
 };
 
 
-export const deleteBook = async (isbn: number) => {
+export const deleteBook = async (isbn: string | number) => {
   const response = await axios.delete(`${API_BASE_URL}/Book/${isbn}`);
   return response.data;
 };
+
