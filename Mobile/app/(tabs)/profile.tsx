@@ -1,28 +1,35 @@
-// app/(tabs)/profile.tsx
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
   const router = useRouter();
+  const [user, setUser] = useState<{ username: string; email?: string } | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const stored = await AsyncStorage.getItem('user');
+      if (stored) setUser(JSON.parse(stored));
+    };
+    fetchUser();
+  }, []);
 
   const handleLogout = () => {
-    Alert.alert(
-      'Confirm Logout',
-      'Are you sure you want to log out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Log Out',
-          style: 'destructive',
-          onPress: () => {
-            // Oturum kapatma işlemleri gerekiyorsa burada yapılabilir
-            router.replace('../../welcome');
-          },
-        },
-      ],
-      { cancelable: true }
-    );
+    setShowConfirm(true); // Show modal
+  };
+
+  const logoutAndRedirect = async () => {
+    setShowConfirm(false);
+    await AsyncStorage.removeItem('user');
+    router.replace('/welcome');
   };
 
   return (
@@ -31,10 +38,10 @@ const ProfileScreen = () => {
 
       <View style={styles.card}>
         <Text style={styles.label}>Username:</Text>
-        <Text style={styles.value}>demo_user</Text>
+        <Text style={styles.value}>{user?.username || 'Unknown'}</Text>
 
         <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>demo@example.com</Text>
+        <Text style={styles.value}>{user?.email || 'Unknown'}</Text>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleLogout}>
@@ -54,6 +61,28 @@ const ProfileScreen = () => {
           purposes only.
         </Text>
       </View>
+
+      {/* Modal */}
+      <Modal
+        visible={showConfirm}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowConfirm(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalText}>Are you sure you want to log out?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setShowConfirm(false)}>
+                <Text style={styles.cancelButton}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={logoutAndRedirect}>
+                <Text style={styles.confirmButton}>Log Out</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -114,6 +143,52 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 20,
   },
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.5)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+modalBox: {
+  backgroundColor: '#fff',
+  padding: 28,
+  borderRadius: 16,
+  width: '85%',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 6,
+  elevation: 10,
+},
+modalText: {
+  fontSize: 18,
+  fontWeight: '600',
+  color: '#222',
+  textAlign: 'center',
+  marginBottom: 24,
+},
+modalButtons: {
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+},
+cancelButton: {
+  fontSize: 16,
+  color: '#666',
+  backgroundColor: '#eee',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+},
+confirmButton: {
+  fontSize: 16,
+  color: '#fff',
+  backgroundColor: '#B266FF',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+  fontWeight: '600',
+},
+
 });
 
 export default ProfileScreen;
