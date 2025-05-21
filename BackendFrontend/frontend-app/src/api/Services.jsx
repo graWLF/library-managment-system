@@ -204,3 +204,14 @@ export const getAuthorById = async (authorId) => {
   }
   return response.json();
 };
+
+export const getPublisherById = async (publisherId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/publisher/${publisherId}`);
+    const data = await response.json();
+    return data;  // Should return an object with { publisherName: 'Some Publisher' }
+  } catch (error) {
+    console.error('Error fetching publisher:', error);
+    throw error;
+  }
+};

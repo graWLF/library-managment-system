@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById } from '../api/Services';
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById } from '../api/Services';
 
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
@@ -11,12 +11,14 @@ function Search() {
   const [error, setError] = useState(null);
   const [authors, setAuthors] = useState([]);
   const [librarianName, setLibrarianName] = useState('');
+  const [publisherName, setPublisherName] = useState(''); // State for publisher name
 
   useEffect(() => {
   const fetchAuthorsAndLibrarian = async () => {
     if (!selectedBook) {
       setAuthors([]);
       setLibrarianName('');
+      setPublisherName('');
       return;
     }
 
@@ -34,10 +36,18 @@ function Search() {
       } else {
         setLibrarianName('Unknown');
       }
+      // Fetch publisher name
+      if (selectedBook.publisherId) {
+        const publisher = await getPublisherById(selectedBook.publisherId); // Assuming this function fetches publisher details
+        setPublisherName(publisher.publisher); // Assuming the publisher name is in the same format
+      } else {
+        setPublisherName('Unknown');
+      }
     } catch (error) {
-      console.error("Failed to fetch authors or librarian", error);
+      console.error("Failed to fetch authors, librarian, or publisher", error);
       setAuthors([]);
       setLibrarianName('Unavailable');
+      setPublisherName('Unavailable');
     }
   };
 
@@ -195,16 +205,11 @@ const handleSearch = async (e) => {
                 <th>Content Link</th>
                 <td>{selectedBook.contentLink}</td>
               </tr>
-              <tr>
-                <th>Librarian ID</th>
-                <td>{selectedBook.librarianId}</td>
-              </tr>
               {/* Librarian Name */}
-<tr>
-  <th>Librarian</th>
-  <td>{librarianName} (ID: {selectedBook.librarianId})</td>
-</tr>
-
+              <tr>
+                <th>Librarian</th>
+                <td>{librarianName} (ID: {selectedBook.librarianId})</td>
+              </tr>
               <tr>
                 <th>Format</th>
                 <td>{selectedBook.format}</td>
@@ -218,8 +223,8 @@ const handleSearch = async (e) => {
                 <td>{selectedBook.releaseDate}</td>
               </tr>
               <tr>
-                <th>Publisher ID</th>
-                <td>{selectedBook.publisherId}</td>
+                <th>Publisher</th>
+                <td>{publisherName} (ID: {selectedBook.publisherId})</td>
               </tr>
               <tr>
                 <th>Weight</th>
