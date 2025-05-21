@@ -110,21 +110,21 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Create([FromBody] BookDto dto)
         {
             await _bookService.CreateAsync(dto);
-            return Ok();
+            return Ok(new { });
         }
 
         [HttpPut("{isbn}")]
         public async Task<IActionResult> Update(long isbn, [FromBody] BookDto dto)
         {
             await _bookService.UpdateAsync(isbn, dto);
-            return Ok();
+            return Ok(new { });
         }
 
         [HttpDelete("{isbn}")]
         public async Task<IActionResult> Delete(long isbn)
         {
             await _bookService.DeleteAsync(isbn);
-            return Ok();
+            return Ok(new { });
         }
     }
 

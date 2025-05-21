@@ -152,7 +152,10 @@ export const updateLibrarian = async (id, librarian) => {
     if (!response.ok) {
         throw new Error("Failed to update librarian");
     }
-    return response.json();
+    if (response.status !== 204) {
+        return response.json();
+    }
+    return;
 };
 export const deleteLibrarian = async (id) => {
     const response = await fetch(`${API_BASE_URL}/librarian/${id}`, {
@@ -161,6 +164,7 @@ export const deleteLibrarian = async (id) => {
     if (!response.ok) {
         throw new Error("Failed to delete librarian");
     }
+    return;
 };
 export const createLibrarian = async (librarian) => {
     const response = await fetch(`${API_BASE_URL}/librarian`, {
@@ -171,7 +175,11 @@ export const createLibrarian = async (librarian) => {
     if (!response.ok) {
         throw new Error("Failed to create librarian");
     }
-    return response.json();
+    const contentLength = response.headers.get("Content-Length");
+    if (contentLength && contentLength !== "0") {
+        return response.json();
+    }
+    return;
 };
 
 export default function ProtectedRoute({ children }) {

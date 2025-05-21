@@ -25,9 +25,11 @@ const handleSubmit = async (e) => {
     setEditingId(null);
     const data = await fetchLibrarians();
     setLibrarians(data);
+    setError('');
   } catch (err) {
-    setError('Failed to save librarian');
-  }
+    console.error('Save librarian error:', err);
+  setError('Failed to save librarian: ' + err.message);
+}
 };
 
 const handleEdit = (lib) => {
@@ -45,6 +47,7 @@ const handleDelete = async (id) => {
     await deleteLibrarian(id);
     const data = await fetchLibrarians();
     setLibrarians(data);
+    setError('');
   } catch (err) {
     setError('Failed to delete librarian');
   }

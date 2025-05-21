@@ -78,7 +78,7 @@ public class BookCopyRepositoryTest
 
         await repo.AddAsync(bookCopy);
 
-        var dbBookCopy = context.BookCopies.Find(20);
+        var dbBookCopy = context.BookCopies.Find(20L);
         Assert.NotNull(dbBookCopy);
         Assert.Equal("D", dbBookCopy.location);
     }
@@ -96,7 +96,7 @@ public class BookCopyRepositoryTest
 
         await repo.UpdateAsync(bookCopy);
 
-        var dbBookCopy = context.BookCopies.Find(30);
+        var dbBookCopy = context.BookCopies.Find(30L);
         Assert.Equal("Updated", dbBookCopy.location);
     }
 
@@ -112,7 +112,7 @@ public class BookCopyRepositoryTest
 
         await repo.DeleteAsync(bookCopy);
 
-        var dbBookCopy = context.BookCopies.Find(40);
+        var dbBookCopy = context.BookCopies.Find(40L);
         Assert.Null(dbBookCopy);
     }
 }

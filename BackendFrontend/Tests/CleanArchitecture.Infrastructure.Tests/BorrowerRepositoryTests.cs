@@ -78,7 +78,7 @@ public class BorrowerRepositoryTest
 
         await repo.AddAsync(borrower);
 
-        var dbBorrower = context.Borrowers.Find(20);
+        var dbBorrower = context.Borrowers.Find(20L);
         Assert.NotNull(dbBorrower);
         Assert.Equal("Fatma", dbBorrower.borrowername);
     }
@@ -96,7 +96,7 @@ public class BorrowerRepositoryTest
 
         await repo.UpdateAsync(borrower);
 
-        var dbBorrower = context.Borrowers.Find(30);
+        var dbBorrower = context.Borrowers.Find(30L);
         Assert.Equal("Yeni", dbBorrower.borrowername);
     }
 
@@ -112,7 +112,7 @@ public class BorrowerRepositoryTest
 
         await repo.DeleteAsync(borrower);
 
-        var dbBorrower = context.Borrowers.Find(40);
+        var dbBorrower = context.Borrowers.Find(40L);
         Assert.Null(dbBorrower);
     }
 }

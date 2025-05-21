@@ -95,7 +95,7 @@ public class BookRepositoryTest
 
         await repo.AddAsync(book);
 
-        var dbBook = context.Books.Find(10);
+        var dbBook = context.Books.Find(10L);
         Assert.NotNull(dbBook);
         Assert.Equal("New Book", dbBook.title);
     }
@@ -113,7 +113,7 @@ public class BookRepositoryTest
 
         await repo.UpdateAsync(book);
 
-        var dbBook = context.Books.Find(20);
+        var dbBook = context.Books.Find(20L);
         Assert.Equal("Updated Title", dbBook.title);
     }
 
@@ -129,7 +129,7 @@ public class BookRepositoryTest
 
         await repo.DeleteAsync(book);
 
-        var dbBook = context.Books.Find(30);
+        var dbBook = context.Books.Find(30L);
         Assert.Null(dbBook);
     }
 }
