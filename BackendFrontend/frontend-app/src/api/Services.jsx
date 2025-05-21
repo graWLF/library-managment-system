@@ -215,3 +215,19 @@ export const getPublisherById = async (publisherId) => {
     throw error;
   }
 };
+
+export const fetchBookByGoogle = async (isbn, apiKey) => {
+    // 1. Fetch book data from Google via your backend
+    const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${apiKey}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book from Google");
+    }
+    const bookData = await response.json();
+
+    // 2. Post the fetched book data to your database
+    //    (Assumes bookData is in the correct format for your postBook method)
+    const postResult = await postBook(bookData);
+
+    // 3. Return the result of the post operation
+    return postResult;
+};

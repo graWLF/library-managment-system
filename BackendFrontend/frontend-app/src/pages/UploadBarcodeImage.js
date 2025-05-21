@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../api/config'; // Adjust the import path as necessary
+import { API_BASE_URL } from '../api/config';
+import { fetchBookByGoogle } from '../api/Services.jsx';
+import { GOOGLE_API_KEY } from '../api/config'; 
 
 const UploadBarcodeImage = () => {
   const [file, setFile] = useState(null);
   const [isbn, setIsbn] = useState('');
+  const [isbnSearch, setIsbnSearch] = useState('');
   const [error, setError] = useState('');
   const [book, setBook] = useState(null);
+  const [message, setMessage] = useState('');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setIsbn('');
+    setIsbnSearch('');
     setError('');
     setBook(null);
+    setMessage('');
   };
 
   const handleSubmit = async (e) => {
@@ -23,7 +28,7 @@ const UploadBarcodeImage = () => {
     }
 
     const formData = new FormData();
-    formData.append('image', file); // ✅ field name must match IFormFile param
+    formData.append('image', file);
 
     try {
       const isbnRes = await fetch(`${API_BASE_URL}/book/extract-isbn`, {
@@ -35,9 +40,29 @@ const UploadBarcodeImage = () => {
         throw new Error(await isbnRes.text());
       }
 
-      const extractedIsbn = await isbnRes.text(); // or .json() if backend wraps it
+      const extractedIsbn = await isbnRes.text();
       setIsbn(extractedIsbn);
+      setIsbnSearch(extractedIsbn); // Autofill ISBN input for Google add
+      setMessage('ISBN extracted! You can now add by Google.');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
+  // Add by Google logic
+  const handleGoogleAdd = async () => {
+    setError('');
+    setMessage('');
+    setBook(null);
+    if (!isbnSearch) {
+      setError('Please enter an ISBN.');
+      return;
+    }
+    try {
+      const apiKey = GOOGLE_API_KEY; // Replace with your actual API key
+      const result = await fetchBookByGoogle(isbnSearch, apiKey);
+      setBook(result);
+      setMessage('Book added to database!');
     } catch (err) {
       setError(err.message);
     }
@@ -52,7 +77,28 @@ const UploadBarcodeImage = () => {
       </form>
 
       {isbn && <p><strong>Extracted ISBN:</strong> {isbn}</p>}
+
+      <div style={{ marginBottom: 16 }}>
+        <input
+          type="text"
+          placeholder="Enter ISBN"
+          value={isbnSearch}
+          onChange={e => setIsbnSearch(e.target.value)}
+        />
+        <button type="button" onClick={handleGoogleAdd}>
+          Add by Google
+        </button>
+      </div>
+
+      {message && <p style={{ color: 'green' }}>{message}</p>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      {book && (
+        <div style={{ marginTop: 16 }}>
+          <h3>Book Data:</h3>
+          <pre>{JSON.stringify(book, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 };

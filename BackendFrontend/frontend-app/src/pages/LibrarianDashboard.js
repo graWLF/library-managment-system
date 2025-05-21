@@ -13,6 +13,9 @@ function AdminDashboard() {
       <aside className="sidebar">
         <div className="logo">📚 Admin Panel</div>
         <nav className="nav-links">
+          <Link to="/librarian/upload-barcode">
+            <button>Add Book by Google</button>
+          </Link>
           <Link to="/librarian/add-book">
             <button>Add Book</button>
           </Link>

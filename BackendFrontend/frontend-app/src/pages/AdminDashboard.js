@@ -16,6 +16,9 @@ function AdminDashboard() {
         </div>
 
         <nav className="nav-links">
+          <Link to="/librarian/upload-barcode">
+                      <button>Add Book by Google</button>
+                    </Link>
           <Link to="/admin/add-book">
             <button>Add Book</button>
           </Link>
