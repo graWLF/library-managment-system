@@ -58,13 +58,13 @@ const SearchScreen = () => {
         onPress={() => router.push(`../book/${item.id}`)}
       >
         <View style={styles.row}>
-          <Image
-            source={{ uri: imageUrl }}
-            style={styles.bookImage}
-            resizeMode="cover"
-            onError={() => console.log('❌ Failed to load image:', imageUrl)}
-          />
-          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Image
+              source={{ uri: imageUrl }}
+              style={styles.bookImage}  // Image styles are applied here
+              resizeMode="cover"
+              onError={() => console.log('❌ Failed to load image:', imageUrl)}
+            />
+            <View style={{ flex: 1, marginLeft: 12 }}>
             <Text style={styles.bookTitle}>{item.title}</Text>
             <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
             <Text style={styles.bookInfo}>Category: {item.category}</Text>

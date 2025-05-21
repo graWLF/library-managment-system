@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Image,  // Import Image component
 } from 'react-native';
 import { fetchBookByISBN } from '@/api/services';
 
@@ -47,48 +48,67 @@ const BookDetailScreen = () => {
     );
   }
 
+  // Fallback for book image
+  const imageUrl =
+    book.image && book.image.startsWith('http')
+      ? book.image
+      : 'https://via.placeholder.com/100x150.png?text=No+Image';
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
+    <ScrollView style={styles.scrollContainer}>
+      <View style={styles.contentContainer}>
+        <TouchableOpacity style={styles.back} onPress={() => router.back()}>
+          <Text style={styles.backText}>← Back</Text>
+        </TouchableOpacity>
 
-      <View style={styles.card}>
-        <Text style={styles.title}>{book.title}</Text>
+        <View style={styles.card}>
+          {/* Display Image */}
+          <Image
+            source={{ uri: imageUrl }}
+            style={styles.bookImage}
+            resizeMode="contain"  // Makes sure the entire image is visible
+            onError={() => console.log('❌ Failed to load image:', imageUrl)}
+          />
 
-        <Text style={styles.label}>ISBN:</Text>
-        <Text style={styles.value}>{book.id}</Text>
+          <Text style={styles.title}>{book.title}</Text>
 
-        <Text style={styles.label}>Category:</Text>
-        <Text style={styles.value}>{book.category}</Text>
+          <Text style={styles.label}>ISBN:</Text>
+          <Text style={styles.value}>{book.id}</Text>
 
-        <Text style={styles.label}>Type:</Text>
-        <Text style={styles.value}>{book.type}</Text>
+          <Text style={styles.label}>Category:</Text>
+          <Text style={styles.value}>{book.category}</Text>
 
-        <Text style={styles.label}>Pages:</Text>
-        <Text style={styles.value}>{book.pages}</Text>
+          <Text style={styles.label}>Type:</Text>
+          <Text style={styles.value}>{book.type}</Text>
 
-        <Text style={styles.label}>Format:</Text>
-        <Text style={styles.value}>{book.format}</Text>
+          <Text style={styles.label}>Pages:</Text>
+          <Text style={styles.value}>{book.pages}</Text>
 
-        <Text style={styles.label}>Publisher ID:</Text>
-        <Text style={styles.value}>{book.publisherId}</Text>
+          <Text style={styles.label}>Format:</Text>
+          <Text style={styles.value}>{book.format}</Text>
 
-        <Text style={styles.label}>Published:</Text>
-        <Text style={styles.value}>{book.releaseDate}</Text>
+          <Text style={styles.label}>Publisher ID:</Text>
+          <Text style={styles.value}>{book.publisherId}</Text>
 
-        <Text style={styles.label}>Description:</Text>
-        <Text style={styles.value}>{book.content}</Text>
+          <Text style={styles.label}>Published:</Text>
+          <Text style={styles.value}>{book.releaseDate}</Text>
+
+          <Text style={styles.label}>Description:</Text>
+          <Text style={styles.value}>{book.content}</Text>
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollContainer: {
+    flex: 1,  // Ensures the ScrollView takes up the full screen height
+    backgroundColor: '#181818',  // This makes sure the background is applied to the entire screen
+  },
+  contentContainer: {
     padding: 20,
-    backgroundColor: '#181818',
-    flexGrow: 1,
+    flexGrow: 1,  // Ensures content stretches when necessary
   },
   loadingContainer: {
     flex: 1,
@@ -133,6 +153,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '400',
+  },
+  bookImage: {
+    width: '100%',  // Make the image take up the full width of its container
+    height: 250,  // Set a fixed height (you can adjust this value)
+    borderRadius: 8,
+    marginBottom: 16,
   },
 });
 
