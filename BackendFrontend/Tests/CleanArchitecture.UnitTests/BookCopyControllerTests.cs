@@ -7,73 +7,76 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class BookCopyControllerTests
+namespace CleanArchitecture.WebApi.Tests.Controllers
 {
-    private readonly Mock<IBookCopyService> _serviceMock;
-    private readonly BookCopyController _controller;
-
-    public BookCopyControllerTests()
+    public class BookCopyControllerTests
     {
-        _serviceMock = new Mock<IBookCopyService>();
-        _controller = new BookCopyController(_serviceMock.Object);
-    }
+        private readonly Mock<IBookCopyService> _serviceMock;
+        private readonly BookCopyController _controller;
 
-    [Fact]
-    public async Task GetAll_ReturnsOkWithResult()
-    {
-        var dtos = new List<BookCopyDTO> { new BookCopyDTO { Id = 1, Isbn = 123, Location = "A" } };
-        _serviceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(dtos);
+        public BookCopyControllerTests()
+        {
+            _serviceMock = new Mock<IBookCopyService>();
+            _controller = new BookCopyController(_serviceMock.Object);
+        }
 
-        var result = await _controller.GetAll();
+        [Fact]
+        public async Task GetAll_ReturnsOkWithResult()
+        {
+            var dtos = new List<BookCopyDTO> { new BookCopyDTO { Id = 1, Isbn = 123, Location = "A" } };
+            _serviceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(dtos);
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(dtos, ok.Value);
-    }
+            var result = await _controller.GetAll();
 
-    [Fact]
-    public async Task GetByID_ReturnsOkWithResult()
-    {
-        var dto = new BookCopyDTO { Id = 2, Isbn = 456, Location = "B" };
-        _serviceMock.Setup(s => s.GetByIdAsync(2)).ReturnsAsync(dto);
+            var ok = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(dtos, ok.Value);
+        }
 
-        var result = await _controller.GetByID(2);
+        [Fact]
+        public async Task GetByID_ReturnsOkWithResult()
+        {
+            var dto = new BookCopyDTO { Id = 2, Isbn = 456, Location = "B" };
+            _serviceMock.Setup(s => s.GetByIdAsync(2)).ReturnsAsync(dto);
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(dto, ok.Value);
-    }
+            var result = await _controller.GetByID(2);
 
-    [Fact]
-    public async Task Create_ReturnsOk()
-    {
-        var dto = new BookCopyDTO { Id = 3, Isbn = 789, Location = "C" };
-        _serviceMock.Setup(s => s.CreateAsync(dto)).Returns(Task.CompletedTask);
+            var ok = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(dto, ok.Value);
+        }
 
-        var result = await _controller.Create(dto);
+        [Fact]
+        public async Task Create_ReturnsOk()
+        {
+            var dto = new BookCopyDTO { Id = 3, Isbn = 789, Location = "C" };
+            _serviceMock.Setup(s => s.CreateAsync(dto)).Returns(Task.CompletedTask);
 
-        Assert.IsType<OkResult>(result);
-        _serviceMock.Verify(s => s.CreateAsync(dto), Times.Once);
-    }
+            var result = await _controller.Create(dto);
 
-    [Fact]
-    public async Task Update_ReturnsOk()
-    {
-        var dto = new BookCopyDTO { Id = 4, Isbn = 111, Location = "D" };
-        _serviceMock.Setup(s => s.UpdateAsync(4, dto)).Returns(Task.CompletedTask);
+            Assert.IsType<OkResult>(result);
+            _serviceMock.Verify(s => s.CreateAsync(dto), Times.Once);
+        }
 
-        var result = await _controller.Update(4, dto);
+        [Fact]
+        public async Task Update_ReturnsOk()
+        {
+            var dto = new BookCopyDTO { Id = 4, Isbn = 111, Location = "D" };
+            _serviceMock.Setup(s => s.UpdateAsync(4, dto)).Returns(Task.CompletedTask);
 
-        Assert.IsType<OkResult>(result);
-        _serviceMock.Verify(s => s.UpdateAsync(4, dto), Times.Once);
-    }
+            var result = await _controller.Update(4, dto);
 
-    [Fact]
-    public async Task Delete_ReturnsOk()
-    {
-        _serviceMock.Setup(s => s.DeleteAsync(5)).Returns(Task.CompletedTask);
+            Assert.IsType<OkResult>(result);
+            _serviceMock.Verify(s => s.UpdateAsync(4, dto), Times.Once);
+        }
 
-        var result = await _controller.Delete(5);
+        [Fact]
+        public async Task Delete_ReturnsOk()
+        {
+            _serviceMock.Setup(s => s.DeleteAsync(5)).Returns(Task.CompletedTask);
 
-        Assert.IsType<OkResult>(result);
-        _serviceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            var result = await _controller.Delete(5);
+
+            Assert.IsType<OkResult>(result);
+            _serviceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+        }
     }
 }
