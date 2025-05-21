@@ -72,7 +72,7 @@ const handleDelete = async (id) => {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <div>
+    <div className="librarian-container">
       <h1>Librarian Management</h1>
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
       <input name="id" placeholder="ID" value={form.id} onChange={handleChange} />
@@ -91,6 +91,7 @@ const handleDelete = async (id) => {
         </button>
       )}
     </form>
+    <div className="table-scroll">
       <table border="1" cellPadding="8">
         <thead>
           <tr>
@@ -127,6 +128,7 @@ const handleDelete = async (id) => {
         </tbody>
       </table>
     </div>
+  </div>
   );
 }
 

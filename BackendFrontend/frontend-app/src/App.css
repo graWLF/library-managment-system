@@ -44,4 +44,34 @@ html, body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.librarian-container {
+  max-width: 600px;
+  margin: 40px auto 0 auto; /* Top margin for spacing */
+  background: white;
+  padding: 24px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  min-height: 90vh;
+}
+
+
+
+.librarian-container th, .librarian-container td {
+  text-align: left;
+  padding: 8px;
+}
+
+@media (max-width: 700px) {
+  .librarian-container {
+    max-width: 98vw;
+    padding: 8px;
+  }
+}
+
+.table-scroll {
+  max-height: 400px; /* Adjust as needed */
+  overflow-y: auto;
+  width: 100%;
+}
+
 
