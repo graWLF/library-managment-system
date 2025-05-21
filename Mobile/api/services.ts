@@ -193,3 +193,13 @@ export const getPublisherById = async (publisherId: string | number) => {
     throw error;
   }
 };
+export const getLoginInfo = async (username: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Registration/userInfo/${username}`);
+    const data = await response.json();
+    return data;  // Should return an object with { username: 'Some User' }
+  } catch (error) {
+    console.error('Error fetching login info:', error);
+    throw error;
+  }
+};
