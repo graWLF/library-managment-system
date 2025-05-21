@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { fetchBookByName, fetchBookById } from '../api/Services';
+import React, { useState, useEffect } from 'react';
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById } from '../api/Services';
 
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
@@ -9,31 +9,74 @@ function Search() {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [error, setError] = useState(null);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    console.log('Searching for book:', bookName);
-
-    try {
-      const results = await fetchBookByName(bookName);
-      console.log('Search Result:', results);
-      
-      if (results.length === 0) {
-        setError('No books found.');
-        setBooks([]);
-        setSelectedBook(null);
-      } else {
-        setBooks(results);
-        setError(null);
-        setSelectedBook(null); // Reset previously selected
+  const [authors, setAuthors] = useState([]);
+  useEffect(() => {
+    const loadAllBooks = async () => {
+      try {
+        const allBooks = await fetchBooks();
+        setBooks(allBooks);
+      } catch (err) {
+        console.error('Failed to load all books:', err);
+        setError('Failed to load books.');
       }
-    } catch (err) {
-      console.error('Error fetching book:', err);
+    };
+
+    loadAllBooks();
+  }, []);
+
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      if (!selectedBook) {
+        setAuthors([]);
+        return;
+      }
+
+      try {
+        const authorIds = await findAuthor(selectedBook.id);
+        const authorPromises = authorIds.map((isbnauthorid) => getAuthorById(isbnauthorid.authorId));
+        const authorDetails = await Promise.all(authorPromises);
+        setAuthors(authorDetails);
+
+      } catch (error) {
+        console.error("Failed to fetch authors", error);
+        setAuthors([]);
+      }
+    };
+
+    fetchAuthors();
+  }, [selectedBook]);
+
+
+const handleSearch = async (e) => {
+  e.preventDefault();
+
+  try {
+    if (bookName.trim() === '') {
+      const allBooks = await fetchBooks();
+      setBooks(allBooks);
+      setError(null);
+      setSelectedBook(null);
+      return;
+    }
+
+    const results = await fetchBookByName(bookName);
+    if (results.length === 0) {
+      setError('No books found.');
       setBooks([]);
       setSelectedBook(null);
-      setError('Failed to fetch books. Please try again.');
+    } else {
+      setBooks(results);
+      setError(null);
+      setSelectedBook(null);
     }
-  };
+  } catch (err) {
+    console.error('Error during search:', err);
+    setBooks([]);
+    setSelectedBook(null);
+    setError('Failed to fetch books. Please try again.');
+  }
+};
+
 
   return (
     <div className="search-page">
@@ -81,6 +124,14 @@ function Search() {
               <tr>
                 <th>Title</th>
                 <td>{selectedBook.title}</td>
+              </tr>
+              <tr>
+                <th>Author(s)</th>
+                <td>
+                  {authors.length > 0
+                    ? authors.map((a) => a.author).join(', ')
+                    : 'Loading authors...'}
+                </td>
               </tr>
               <tr>
                 <th>Category</th>

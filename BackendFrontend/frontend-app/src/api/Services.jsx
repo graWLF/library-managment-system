@@ -173,12 +173,26 @@ export const createLibrarian = async (librarian) => {
     }
     return response.json();
 };
-function ProtectedRoute({ children }) {
+
+export default function ProtectedRoute({ children }) {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   } return children;
 }
 
-export default ProtectedRoute;
-  
+export const findAuthor = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book");
+    }
+    return response.json();
+};
+
+export const getAuthorById = async (authorId) => {
+  const response = await fetch(`${API_BASE_URL}/Author/${authorId}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch author ${authorId}`);
+  }
+  return response.json();
+};

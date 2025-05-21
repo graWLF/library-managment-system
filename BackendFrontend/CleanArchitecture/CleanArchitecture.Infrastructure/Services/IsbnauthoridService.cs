@@ -22,6 +22,12 @@ namespace CleanArchitecture.Infrastructure.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<IsbnauthoridDTO>> GetByISBNAsync(long Id)
+        {
+            var borrowering = await _repository.GetByISBNAsync(Id);
+            return _mapper.Map<IEnumerable<IsbnauthoridDTO>>(borrowering);
+        }
+
         public async Task<IEnumerable<IsbnauthoridDTO>> GetAllAsync()
         {
             var borrowerings = await _repository.GetAllAsync();
