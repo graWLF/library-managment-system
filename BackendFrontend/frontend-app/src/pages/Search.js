@@ -118,6 +118,16 @@ const handleSearch = async (e) => {
           <table>
             <tbody>
               <tr>
+                <th>Image</th>
+                <td>
+                  <img 
+                    src={selectedBook.image} 
+                    alt={selectedBook.title} 
+                    style={{ maxWidth: '150px', height: 'auto' }} 
+                  />
+                </td>
+              </tr>
+              <tr>
                 <th>ISBN</th>
                 <td>{selectedBook.id}</td>
               </tr>
@@ -164,10 +174,6 @@ const handleSearch = async (e) => {
               <tr>
                 <th>Content Source</th>
                 <td>{selectedBook.contentSource}</td>
-              </tr>
-              <tr>
-                <th>Image</th>
-                <td>{selectedBook.image}</td>
               </tr>
               <tr>
                 <th>Price</th>
