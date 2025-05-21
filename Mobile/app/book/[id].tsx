@@ -9,19 +9,44 @@ import {
   TouchableOpacity,
   Image,  // Import Image component
 } from 'react-native';
-import { fetchBookByISBN } from '@/api/services';
+import { fetchBookByISBN, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById } from '@/api/services';
 
 const BookDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [book, setBook] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [authors, setAuthors] = useState<any[]>([]);
+  const [librarianName, setLibrarianName] = useState('');
+  const [publisherName, setPublisherName] = useState('');
 
   useEffect(() => {
     const loadBook = async () => {
       try {
         const data = await fetchBookByISBN(id as string);
         setBook(data);
+
+        // Fetch authors and librarian data
+        const authorIds = await findAuthor(data.id); // Fetch author ids for the book
+        const authorPromises = authorIds.map((a: any) => getAuthorById(a.authorId));
+        const authorDetails = await Promise.all(authorPromises);
+        setAuthors(authorDetails);
+
+        if (data.librarianId) {
+          const librarian = await fetchLibrarianById(data.librarianId);
+          setLibrarianName(librarian.librarianName);
+        } else {
+          setLibrarianName('Unknown');
+        }
+
+        // Fetch publisher data
+        if (data.publisherId) {
+          const publisher = await getPublisherById(data.publisherId);
+          setPublisherName(publisher.publisher);
+        } else {
+          setPublisherName('Unknown Publisher');
+        }
+
       } catch (err) {
         console.error('❌ Book Fetch Error:', err);
       } finally {
@@ -87,14 +112,32 @@ const BookDetailScreen = () => {
           <Text style={styles.label}>Format:</Text>
           <Text style={styles.value}>{book.format}</Text>
 
-          <Text style={styles.label}>Publisher ID:</Text>
-          <Text style={styles.value}>{book.publisherId}</Text>
-
           <Text style={styles.label}>Published:</Text>
           <Text style={styles.value}>{book.releaseDate}</Text>
 
           <Text style={styles.label}>Description:</Text>
           <Text style={styles.value}>{book.content}</Text>
+
+          {/* Author, Librarian, and Publisher Info */}
+          <View style={styles.infoSection}>
+            <Text style={styles.label}>Author(s):</Text>
+            <Text style={styles.value}>
+              {authors.length > 0
+                ? authors.map((a: any) => a.author).join(', ')
+                : 'Loading authors...'}
+            </Text>
+
+              <Text style={styles.label}>Librarian:</Text>
+              <Text style={styles.value}>
+                {librarianName || 'Loading librarian...'} (ID: {book.librarianId})
+              </Text>
+
+            <Text style={styles.label}>Publisher:</Text>
+            <Text style={styles.value}>
+              {publisherName || 'Loading publisher...'}  (ID: {book.publisherId})
+              </Text>
+
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -103,12 +146,12 @@ const BookDetailScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flex: 1,  // Ensures the ScrollView takes up the full screen height
-    backgroundColor: '#181818',  // This makes sure the background is applied to the entire screen
+    flex: 1,
+    backgroundColor: '#181818',
   },
   contentContainer: {
     padding: 20,
-    flexGrow: 1,  // Ensures content stretches when necessary
+    flexGrow: 1,
   },
   loadingContainer: {
     flex: 1,
@@ -155,10 +198,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   bookImage: {
-    width: '100%',  // Make the image take up the full width of its container
-    height: 250,  // Set a fixed height (you can adjust this value)
+    width: '100%',
+    height: 250,
     borderRadius: 8,
     marginBottom: 16,
+  },
+  infoSection: {
+    marginTop: 20,
   },
 });
 

@@ -159,3 +159,37 @@ export const deleteBook = async (isbn: string | number) => {
   return response.data;
 };
 
+export const findAuthor = async (isbn: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book");
+    }
+    return response.json();
+};
+
+export const getAuthorById = async (authorId: string | number) => {
+  const response = await fetch(`${API_BASE_URL}/Author/${authorId}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch author ${authorId}`);
+  }
+  return response.json();
+};
+
+export const fetchLibrarianById = async (id: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/librarian/${id}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch librarian");
+    }
+    return response.json();
+}
+
+export const getPublisherById = async (publisherId: string | number) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/publisher/${publisherId}`);
+    const data = await response.json();
+    return data;  // Should return an object with { publisherName: 'Some Publisher' }
+  } catch (error) {
+    console.error('Error fetching publisher:', error);
+    throw error;
+  }
+};
