@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById } from '../api/Services';
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById } from '../api/Services';
 
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,40 @@ function Search() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [error, setError] = useState(null);
   const [authors, setAuthors] = useState([]);
+  const [librarianName, setLibrarianName] = useState('');
+
+  useEffect(() => {
+  const fetchAuthorsAndLibrarian = async () => {
+    if (!selectedBook) {
+      setAuthors([]);
+      setLibrarianName('');
+      return;
+    }
+
+    try {
+      // Fetch authors
+      const authorIds = await findAuthor(selectedBook.id);
+      const authorPromises = authorIds.map((a) => getAuthorById(a.authorId));
+      const authorDetails = await Promise.all(authorPromises);
+      setAuthors(authorDetails);
+
+      // Fetch librarian
+      if (selectedBook.librarianId) {
+        const librarian = await fetchLibrarianById(selectedBook.librarianId);
+        setLibrarianName(librarian.librarianName);
+      } else {
+        setLibrarianName('Unknown');
+      }
+    } catch (error) {
+      console.error("Failed to fetch authors or librarian", error);
+      setAuthors([]);
+      setLibrarianName('Unavailable');
+    }
+  };
+
+  fetchAuthorsAndLibrarian();
+}, [selectedBook]);
+
   useEffect(() => {
     const loadAllBooks = async () => {
       try {
@@ -23,28 +57,6 @@ function Search() {
 
     loadAllBooks();
   }, []);
-
-  useEffect(() => {
-    const fetchAuthors = async () => {
-      if (!selectedBook) {
-        setAuthors([]);
-        return;
-      }
-
-      try {
-        const authorIds = await findAuthor(selectedBook.id);
-        const authorPromises = authorIds.map((isbnauthorid) => getAuthorById(isbnauthorid.authorId));
-        const authorDetails = await Promise.all(authorPromises);
-        setAuthors(authorDetails);
-
-      } catch (error) {
-        console.error("Failed to fetch authors", error);
-        setAuthors([]);
-      }
-    };
-
-    fetchAuthors();
-  }, [selectedBook]);
 
 
 const handleSearch = async (e) => {
@@ -187,6 +199,12 @@ const handleSearch = async (e) => {
                 <th>Librarian ID</th>
                 <td>{selectedBook.librarianId}</td>
               </tr>
+              {/* Librarian Name */}
+<tr>
+  <th>Librarian</th>
+  <td>{librarianName} (ID: {selectedBook.librarianId})</td>
+</tr>
+
               <tr>
                 <th>Format</th>
                 <td>{selectedBook.format}</td>
