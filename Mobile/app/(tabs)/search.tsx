@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { searchBooks, searchBooksByIsbn } from '@/api/services';
@@ -21,7 +22,6 @@ const SearchScreen = () => {
   const router = useRouter();
 
   const isIsbn = (text: string) => {
-    // Remove dashes and spaces, and check if it's all digits and 10 or 13 characters
     const cleaned = text.replace(/[-\s]/g, '');
     return /^\d{10}(\d{3})?$/.test(cleaned);
   };
@@ -36,7 +36,6 @@ const SearchScreen = () => {
         ? await searchBooksByIsbn(trimmedQuery)
         : await searchBooks(trimmedQuery);
 
-      // Normalize result to array for FlatList
       const resultsArray = Array.isArray(books) ? books : [books];
       setResults(resultsArray);
     } catch (error) {
@@ -47,16 +46,33 @@ const SearchScreen = () => {
     }
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => router.push(`../book/${item.id}`)}
-    >
-      <Text style={styles.bookTitle}>{item.title}</Text>
-      <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
-      <Text style={styles.bookInfo}>Category: {item.category}</Text>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }: { item: any }) => {
+    const imageUrl =
+      item.image && item.image.startsWith('http')
+        ? item.image
+        : 'https://via.placeholder.com/100x150.png?text=No+Image';
+
+    return (
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => router.push(`../book/${item.id}`)}
+      >
+        <View style={styles.row}>
+          <Image
+            source={{ uri: imageUrl }}
+            style={styles.bookImage}
+            resizeMode="cover"
+            onError={() => console.log('❌ Failed to load image:', imageUrl)}
+          />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Text style={styles.bookTitle}>{item.title}</Text>
+            <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
+            <Text style={styles.bookInfo}>Category: {item.category}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -157,6 +173,16 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 80,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bookImage: {
+    width: 60,
+    height: 90,
+    borderRadius: 4,
+    backgroundColor: '#444',
   },
 });
 
