@@ -89,10 +89,11 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok("Supervisor login successful.");
         }
 
-    }
-    public class LoginRequestDTO
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
+
+        public class LoginRequestDTO
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
     }
 }
