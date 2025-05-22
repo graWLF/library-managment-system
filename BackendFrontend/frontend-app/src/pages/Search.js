@@ -107,9 +107,15 @@ function Search() {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
         for (const a of authors) {
+          try{
           await deleteIsbnAuthorid(selectedBook.id, a.authorId);
+          } catch (err) {}
         }
+         try {
         await deleteBookCopyByIsbn(selectedBook.id);
+      } catch (err) {
+        // Ignore if not found or already deleted
+      }
         await deleteBook(selectedBook.id);
         setSelectedBook(null);
         setBooks(books.filter(b => b.id !== selectedBook.id));
