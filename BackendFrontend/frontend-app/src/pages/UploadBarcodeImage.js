@@ -40,10 +40,16 @@ const UploadBarcodeImage = () => {
         throw new Error(await isbnRes.text());
       }
 
-      const extractedIsbn = await isbnRes.text();
-      setIsbn(extractedIsbn);
-      setIsbnSearch(extractedIsbn); // Autofill ISBN input for Google add
-      setMessage('ISBN extracted! You can now add by Google.');
+      const extractedIsbn = await isbnRes.json(); // Assuming response is JSON with { "barcode": "9786057775986" }
+
+      // Extract ISBN from the response object and set it to state
+      if (extractedIsbn?.barcode) {
+        setIsbn(extractedIsbn.barcode); // Set the raw ISBN value
+        setIsbnSearch(extractedIsbn.barcode); // Autofill the ISBN input
+        setMessage('ISBN extracted! You can now add by Google.');
+      } else {
+        setError('ISBN extraction failed.');
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -93,12 +99,12 @@ const UploadBarcodeImage = () => {
       {message && <p style={{ color: 'green' }}>{message}</p>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-      {book && (
+      {/* {book && (
         <div style={{ marginTop: 16 }}>
           <h3>Book Data:</h3>
           <pre>{JSON.stringify(book, null, 2)}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
