@@ -14,5 +14,6 @@ namespace CleanArchitecture.Core.Interfaces
         Task CreateAsync(BookCopyDTO dto);
         Task UpdateAsync(long Id, BookCopyDTO dto);
         Task DeleteAsync(long Id);
+        Task DeleteByIsbnAsync(long Isbn);
     }
 }

@@ -14,5 +14,7 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
         Task AddAsync(BookCopy bookCopy);
         Task UpdateAsync(BookCopy bookCopy);
         Task DeleteAsync(BookCopy bookCopy);
+        Task<IEnumerable<BookCopy>> GetAllByIsbnAsync(long Id);
+
     }
 }

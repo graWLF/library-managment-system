@@ -1,55 +1,77 @@
-/* Center the whole page content */
+/* Body with subtle background gradient */
 body {
   margin: 0;
-  padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
+  background: linear-gradient(to right, #e0f7fa, #e1f5fe);
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Container card */
+/* Wrapper for background enhancements */
+.login-background {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card container */
 .login-container {
-  background-color: #fff;
-  padding: 40px;
+  background-color: #ffffff;
+  padding: 40px 30px;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   box-sizing: border-box;
   text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Heading */
+/* Title */
 .login-container h2 {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   color: #333;
+  font-size: 26px;
 }
 
-/* Form styles */
-form {
-  width: 100%;
+/* Subtext */
+.subtext {
+  margin-bottom: 30px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Form layout */
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   margin-bottom: 6px;
-  font-weight: 500;
-  color: #555;
+  font-weight: 600;
+  color: #444;
 }
 
 input {
   width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 20px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-sizing: border-box;
   font-size: 14px;
+  transition: border-color 0.3s;
 }
 
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Button styling */
 button {
   width: 100%;
   padding: 12px;
@@ -66,9 +88,16 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Error text */
 .error {
   color: #e74c3c;
   font-size: 14px;
-  margin-top: -10px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

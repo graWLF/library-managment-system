@@ -14,5 +14,6 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
         Task AddAsync(Isbnauthorid isbnauthorid);
         Task UpdateAsync(Isbnauthorid isbnauthorid);
         Task DeleteAsync(Isbnauthorid isbnauthorid);
+        Task<IEnumerable<Isbnauthorid>> GetByISBNAsync(long Id);
     }
 }

@@ -20,7 +20,11 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             return await _context.registrations.ToListAsync();
         }
-
+        public async Task<Registration> GetUserInfoAsync(string usernameOrEmail)
+        {
+            return await _context.registrations
+                .FirstOrDefaultAsync(r => r.Username == usernameOrEmail || r.Email == usernameOrEmail);
+        }
         public async Task<Registration> GetByIDAsync(int id)
         {
             return await _context.registrations.FindAsync(id);

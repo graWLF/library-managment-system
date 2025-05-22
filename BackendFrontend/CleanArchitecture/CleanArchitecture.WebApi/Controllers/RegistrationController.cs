@@ -23,6 +23,16 @@ namespace CleanArchitecture.WebApi.Controllers
             var result = await _registrationService.GetAllAsync();
             return Ok(result);
         }
+        // Get user info by username or email
+        [HttpGet("userInfo/{usernameOrEmail}")]
+        public async Task<IActionResult> GetUserInfo(string usernameOrEmail)
+        {
+            var result = await _registrationService.GetUserInfoAsync(usernameOrEmail);
+            if (result == null)
+                return NotFound($"User with username or email {usernameOrEmail} not found.");
+            return Ok(result);
+        }
+
 
         // GET: api/registration/{id}
         [HttpGet("{id}")]
@@ -89,10 +99,11 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok("Supervisor login successful.");
         }
 
-    }
-    public class LoginRequestDTO
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
+
+        public class LoginRequestDTO
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
     }
 }

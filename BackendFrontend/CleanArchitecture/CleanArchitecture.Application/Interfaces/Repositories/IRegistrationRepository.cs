@@ -16,5 +16,6 @@ namespace CleanArchitecture.Core.Interfaces.Repositories
         Task DeleteAsync(Registration registration);
         bool Login(string username, string password);
         bool CheckSupervisor(string username, string password);
+        Task<Registration> GetUserInfoAsync(string usernameOrEmail);
     }
 }

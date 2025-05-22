@@ -26,6 +26,12 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             return await _context.BookCopies.FindAsync(Id);
         }
+        public async Task<IEnumerable<BookCopy>> GetAllByIsbnAsync(long Isbn)
+        {
+            return await _context.BookCopies.Where(b => b.isbn == Isbn).ToListAsync();
+        }
+
+
         public async Task AddAsync(BookCopy bookCopy)
         {
             _context.BookCopies.Add(bookCopy);

@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../api/config';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
@@ -16,33 +18,25 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/Registration/login', {
+      const response = await fetch(`${API_BASE_URL}/Registration/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (response.status === 200) {
-        // post to check supervisor role
-        const roleResponse = await fetch('http://localhost:5000/api/Registration/checkSupervisor', {
+        const roleResponse = await fetch(`${API_BASE_URL}/Registration/checkSupervisor`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         });
-        
-        if (roleResponse.status === 200) {
-          localStorage.setItem('isAuthenticated', 'true');
-          navigate('/admin'); // ✅ Success: redirect to admin page
-        } else {
-          localStorage.setItem('isAuthenticated', 'true');
-          navigate('/librarian'); // ✅ Success: redirect to adminLibrarian page
-        }
 
-        // navigate('/admin'); // ✅ Success: redirect to search page
+        localStorage.setItem('isAuthenticated', 'true');
+        navigate(roleResponse.status === 200 ? '/admin' : '/librarian');
       } else if (response.status === 401) {
-        setError('Invalid username or password'); // ❌ Wrong credentials
+        setError('Invalid username or password');
       } else {
-        setError('Unexpected error. Please try again.'); // 🔄 Other issues
+        setError('Unexpected error. Please try again.');
       }
     } catch (err) {
       console.error('Login failed:', err);
@@ -50,35 +44,40 @@ function Login() {
     }
   };
 
-return (
-  <div className="login-container">
-    <h2>Login Page</h2>
-    <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username or Email:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
-      </form>
+  return (
+    <div className="login-background">
+      <div className="login-container">
+        <h2>Welcome Back</h2>
+        <p className="subtext">Please log in to your account</p>
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="username">Username or Email</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              placeholder="Enter your username or email"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+          {error && <p className="error">{error}</p>}
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
   );
 }

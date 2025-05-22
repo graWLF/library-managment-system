@@ -23,6 +23,13 @@ namespace CleanArchitecture.WebApi.Controllers
             var result = await _isbnauthoridService.GetAllAsync();
             return Ok(result);
         }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetByISBN(long Id)
+        {
+            var result = await _isbnauthoridService.GetByISBNAsync(Id);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
 
         [HttpGet("{Id}/{authorid}")]
         public async Task<IActionResult> GetByCompositeKey(long Id, long authorid)

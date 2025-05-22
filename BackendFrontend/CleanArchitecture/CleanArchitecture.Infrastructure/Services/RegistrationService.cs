@@ -28,6 +28,12 @@ namespace CleanArchitecture.Infrastructure.Services
             var registrations = await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<RegistrationDTO>>(registrations);
         }
+        // Get user info by username or email
+        public async Task<RegistrationDTO> GetUserInfoAsync(string usernameOrEmail)
+        {
+            var registration = await _repository.GetUserInfoAsync(usernameOrEmail);
+            return _mapper.Map<RegistrationDTO>(registration);
+        }
 
         // Get a registration by ID
         public async Task<RegistrationDTO> GetByIDAsync(int ID)

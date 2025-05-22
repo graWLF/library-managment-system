@@ -18,6 +18,12 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
             _context = context;
         }
+        public async Task<IEnumerable<Isbnauthorid>> GetByISBNAsync(long Id)
+        {
+            return await _context.isbnauthorids
+                .Where(b => b.Id == Id) // Filter by ISBN
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<Isbnauthorid>> GetAllAsync()
         {

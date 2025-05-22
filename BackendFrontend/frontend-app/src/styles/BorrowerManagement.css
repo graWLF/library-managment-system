@@ -1,20 +1,27 @@
-/* General container */
+html, body {
+  height: auto;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
 .borrower-management {
   max-width: 1000px;
-  margin: auto;
-  padding: 20px;
+  margin: 30px auto;
+  padding: 50px 30px 30px 30px; /* Increased top padding */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fafafa;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
 /* Header */
-.borrower-management h2,
-.borrower-management h3 {
+.borrower-management h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 26px;
 }
 
 /* View buttons */
@@ -22,90 +29,117 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 20px;
-  gap: 10px;
+  gap: 12px;
+  margin-bottom: 25px;
 }
 
 .view-buttons button,
 .back-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  background-color: #4CAF50;
-  color: white;
+  padding: 10px 18px;
+  font-size: 15px;
+  background-color: #3498db;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .view-buttons button:hover,
 .back-button:hover {
-  background-color: #45a049;
+  background-color: #2980b9;
+  transform: translateY(-1px);
 }
 
 /* Search input */
 .search-input {
   display: block;
   width: 100%;
-  max-width: 300px;
-  padding: 8px;
-  margin: 10px auto 20px auto;
-  font-size: 14px;
+  max-width: 320px;
+  padding: 10px;
+  margin: 0 auto 20px auto;
+  font-size: 15px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
-/* Error message */
+/* Error */
 .error {
-  color: red;
+  color: #e74c3c;
   text-align: center;
   margin-top: 10px;
+  font-weight: bold;
 }
 
-/* Table styles */
+/* Table styling */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 15px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 12px 15px;
   text-align: center;
 }
 
 th {
-  background-color: #f4f4f4;
+  background-color: #f0f0f0;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+th:hover {
+  background-color: #e0e0e0;
 }
 
 tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #fbfbfb;
 }
 
 tr:hover {
-  background-color: #f1f1f1;
+  background-color: #f1f7ff;
+}
+
+button[title="Edit"] {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #f39c12;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button[title="Edit"]:hover {
+  background-color: #e67e22;
 }
 
 /* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  gap: 5px;
+  margin-top: 25px;
+  gap: 8px;
 }
 
 .pagination button {
   padding: 6px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
-  background-color: white;
+  background-color: #b4abab;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 .pagination button:hover {
@@ -113,7 +147,18 @@ tr:hover {
 }
 
 .pagination button.active {
-  background-color: #4CAF50;
+  background-color: #3498db;
   color: white;
-  border-color: #4CAF50;
+  border-color: #3498db;
+}
+
+/* Responsive table */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  /* Optional: set a max-height if you want vertical scroll too */
+  /* max-height: 400px; */
+}
+.table-scroll table {
+  min-width: 600px; /* or whatever fits your columns */
 }

@@ -8,7 +8,7 @@ function BorrowingsList({ onNavigate }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(15);  // Change this to 15 rows per page
   const [error, setError] = useState(null);
 
   useEffect(() => {
