@@ -203,3 +203,23 @@ export const getLoginInfo = async (username: string) => {
     throw error;
   }
 };
+
+export const fetchAuthors = async () => {
+    const response = await fetch(`${API_BASE_URL}/author`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch authors");
+    }
+    return response.json();
+}
+
+export const addIsbnAuthorid = async (id : string | number , authorid : string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, authorid }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add ISBN and Author ID");
+    }
+    return response.json();
+}
