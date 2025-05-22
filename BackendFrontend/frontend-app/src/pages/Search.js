@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById } from '../api/Services';
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook } from '../api/Services';
 
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
@@ -96,6 +96,19 @@ const handleSearch = async (e) => {
     setBooks([]);
     setSelectedBook(null);
     setError('Failed to fetch books. Please try again.');
+  }
+};
+
+const handleDelete = async () => {
+  if (window.confirm('Are you sure you want to delete this book?')) {
+    try {
+      await deleteBook(selectedBook.id);
+      setSelectedBook(null);
+      setBooks(books.filter(b => b.id !== selectedBook.id));
+      alert('Book deleted successfully!');
+    } catch (err) {
+      alert('Failed to delete book.');
+    }
   }
 };
 
@@ -249,9 +262,17 @@ const handleSearch = async (e) => {
                   <span role="img" aria-label="edit">✏️</span>
           </button>
           </Link>
-          <button onClick={() => setSelectedBook(null)} className="back-button">
-            ← Back to list
-          </button>
+          <br />
+          <button
+  onClick={handleDelete}
+  className="delete-button"
+  style={{ background: '#e74c3c', color: 'white', marginTop: 8 }}
+>
+  <span role="img" aria-label="delete">🗑️</span> Delete
+</button>
+<button onClick={() => setSelectedBook(null)} className="back-button" style={{ marginTop: 8 }}>
+  ← Back to list
+</button>
           
         </div>
       )}
