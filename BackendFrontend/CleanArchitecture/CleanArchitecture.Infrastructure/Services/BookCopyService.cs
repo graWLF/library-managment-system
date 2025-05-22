@@ -27,6 +27,16 @@ namespace CleanArchitecture.Infrastructure.Services
             var bookCopies = await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<BookCopyDTO>>(bookCopies);
         }
+        public async Task DeleteByIsbnAsync(long Isbn)
+        {
+            var bookCopies = await _repository.GetAllByIsbnAsync(Isbn);
+            if (bookCopies == null || !bookCopies.Any()) throw new Exception("BookCopy not found");
+            foreach (var bookCopy in bookCopies)
+            {
+                await _repository.DeleteAsync(bookCopy);
+            }
+
+        }
 
         public async Task<BookCopyDTO> GetByIdAsync(long Id)
         {

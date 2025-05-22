@@ -30,6 +30,14 @@ namespace CleanArchitecture.WebApi.Controllers
             var result = await _bookCopyService.GetByIdAsync(Id);
             return Ok(result);
         }
+        // delete all records by given only isbn
+        [HttpDelete("isbn/{Isbn}")]
+        public async Task<IActionResult> DeleteByIsbn(long Isbn)
+        {
+            await _bookCopyService.DeleteByIsbnAsync(Isbn);
+            return Ok();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BookCopyDTO dto)
