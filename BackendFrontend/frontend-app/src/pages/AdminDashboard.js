@@ -18,14 +18,14 @@ function AdminDashboard() {
         <nav className="nav-links">
           <Link to="/librarian/upload-barcode">
                       <button>Add Book by Google</button>
-                    </Link>
+          </Link>
           <Link to="/admin/add-book">
             <button>Add Book</button>
           </Link>
           <Link to="/admin/librarian-managment">
             <button>Librarian</button>
           </Link>
-          <button className="sidebar-button">Supervisor</button>
+          {/* <button className="sidebar-button">Supervisor</button> */}
           <Link to="/admin/borrowers">
             <button>Borrower Management</button>
           </Link>
