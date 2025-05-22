@@ -1,3 +1,11 @@
+html, body {
+  height: auto;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
 .borrower-management {
   max-width: 1000px;
   margin: 30px auto;
@@ -128,7 +136,7 @@ button[title="Edit"]:hover {
   padding: 6px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: #b4abab;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;

@@ -277,3 +277,52 @@ export const fetchBookByIsbn = async (isbn) => {
     }
     return response.json();
 };
+
+export const updateBorrower = async (id, borrower) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrower),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update borrower");
+    }
+    return response.json();
+}
+export const fetchBorrowerById = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch borrower");
+    }
+    return response.json();
+}
+export const deleteBorrower = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete borrower");
+    }
+    return response.json();
+}
+export const updateBorrowing = async (id, borrowing) => {
+    const response = await fetch(`${API_BASE_URL}/borrowing/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrowing),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update borrowing");
+    }
+    return response.json();
+}
+export const deleteBorrowing = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrowing/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete borrowing");
+    }
+    return response.json();
+}
+
