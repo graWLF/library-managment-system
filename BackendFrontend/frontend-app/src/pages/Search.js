@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook, deleteIsbnAuthorid, deleteBookCopy } from '../api/Services';
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook, deleteIsbnAuthorid, deleteBookCopyByIsbn } from '../api/Services';
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
 
@@ -109,7 +109,7 @@ function Search() {
         for (const a of authors) {
           await deleteIsbnAuthorid(selectedBook.id, a.authorId);
         }
-        await deleteBookCopy(selectedBook.id);
+        await deleteBookCopyByIsbn(selectedBook.id);
         await deleteBook(selectedBook.id);
         setSelectedBook(null);
         setBooks(books.filter(b => b.id !== selectedBook.id));

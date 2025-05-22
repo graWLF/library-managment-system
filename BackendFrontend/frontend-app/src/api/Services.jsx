@@ -260,12 +260,12 @@ export const deleteIsbnAuthorid = async (id, authorid) => {
     }
     return;
 };
-export const deleteBookCopy = async (id) => {
-    const response = await fetch(`${API_BASE_URL}/BookCopy/${id}`, {
+export const deleteBookCopyByIsbn = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/BookCopy/isbn/${isbn}`, {
         method: "DELETE",
     });
     if (!response.ok) {
-        throw new Error("Failed to delete book copy");
+        throw new Error("Failed to delete book copies by ISBN");
     }
     return;
 };
