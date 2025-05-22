@@ -269,3 +269,11 @@ export const deleteBookCopyByIsbn = async (isbn) => {
     }
     return;
 };
+
+export const fetchBookByIsbn = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/book/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book by ISBN");
+    }
+    return response.json();
+};

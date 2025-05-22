@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook, deleteIsbnAuthorid, deleteBookCopyByIsbn } from '../api/Services';
+import { fetchBooks, fetchBookByName, fetchBookByIsbn, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook, deleteIsbnAuthorid, deleteBookCopyByIsbn } from '../api/Services';
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
 
@@ -76,7 +76,9 @@ function Search() {
     e.preventDefault();
 
     try {
-      if (bookName.trim() === '') {
+      const trimmed = bookName.trim();
+      if (trimmed === '') {
+        // List all books if search bar is empty
         const allBooks = await fetchBooks();
         setBooks(allBooks);
         setError(null);
@@ -84,7 +86,23 @@ function Search() {
         return;
       }
 
-      const results = await fetchBookByName(bookName);
+      if (/^\d+$/.test(trimmed)) {
+        // If input is all digits, treat as ISBN
+        const book = await fetchBookByIsbn(trimmed);
+        if (book && book.id) {
+          setBooks([book]);
+          setError(null);
+          setSelectedBook(null);
+        } else {
+          setBooks([]);
+          setSelectedBook(null);
+          setError('No book found with this ISBN.');
+        }
+        return;
+      }
+
+      // Otherwise, search by title
+      const results = await fetchBookByName(trimmed);
       if (results.length === 0) {
         setError('No books found.');
         setBooks([]);
@@ -95,7 +113,6 @@ function Search() {
         setSelectedBook(null);
       }
     } catch (err) {
-      console.error('Error during search:', err);
       setBooks([]);
       setSelectedBook(null);
       setError('Failed to fetch books. Please try again.');
