@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import { fetchBookByISBN, deleteBook } from '@/api/services';
+import { deleteBook, deleteBookCopyByIsbn, deleteIsbnAuthorid, fetchBookByISBN } from '@/api/services';
+
 
 const DeleteBookScreen = () => {
   const [isbn, setIsbn] = useState('');
@@ -45,20 +46,42 @@ const DeleteBookScreen = () => {
   const confirmDelete = async () => {
     if (!bookToDelete?.id) return;
 
-    console.log('🗑 Sending DELETE request for ID (used as ISBN):', bookToDelete.id);
+    console.log('🗑 Deleting book and related data for ISBN:', bookToDelete.id);
 
     try {
-      const result = await deleteBook(bookToDelete.id); // id kullanılıyor
-      console.log('✅ DELETE SUCCESS:', result);
+      // Delete ISBN-Author relationships
+      if (bookToDelete.authors && Array.isArray(bookToDelete.authors)) {
+        for (const author of bookToDelete.authors) {
+          try {
+            await deleteIsbnAuthorid(bookToDelete.id, author.authorId);
+          } catch (err) {
+            console.warn(`⚠️ Failed to delete author relation for authorId: ${author.authorId}`);
+          }
+        }
+      }
+
+      // Delete book copies
+      try {
+        await deleteBookCopyByIsbn(bookToDelete.id);
+      } catch (err) {
+        console.warn('⚠️ No book copies to delete or already deleted');
+      }
+
+      // Delete the book itself
+      await deleteBook(bookToDelete.id);
+
+      // Reset state
       setShowConfirm(false);
       setIsbn('');
       setBookToDelete(null);
-      alert('✅ Book deleted successfully');
+
+      alert('✅ Book and related data deleted successfully');
     } catch (error: any) {
       console.error('❌ DELETE ERROR:', error.response?.data || error.message);
-      alert('❌ Failed to delete the book');
+      alert('❌ Failed to delete the book or related data');
     }
   };
+
 
   return (
     <View style={styles.container}>

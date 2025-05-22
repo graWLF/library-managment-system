@@ -153,12 +153,6 @@ export const updateBook = async (isbn: string, bookData: any) => {
   return response.data;
 };
 
-
-export const deleteBook = async (isbn: string | number) => {
-  const response = await axios.delete(`${API_BASE_URL}/Book/${isbn}`);
-  return response.data;
-};
-
 export const findAuthor = async (isbn: string | number) => {
     const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${isbn}`);
     if (!response.ok) {
@@ -223,3 +217,32 @@ export const addIsbnAuthorid = async (id : string | number , authorid : string |
     }
     return response.json();
 }
+
+export const deleteIsbnAuthorid = async (id : string | number , authorid : string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${id}/${authorid}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete ISBN-AuthorID relation");
+    }
+    return;
+};
+export const deleteBookCopyByIsbn = async (isbn: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/BookCopy/isbn/${isbn}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book copies by ISBN");
+    }
+    return;
+};
+
+export const deleteBook = async (id: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/book/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book");
+    }
+    return;
+};
