@@ -73,5 +73,34 @@ html, body {
   overflow-y: auto;
   width: 100%;
 }
+.borrower-container {
+  max-width: 700px;
+  margin: 40px auto 0 auto;
+  background: white;
+  padding: 24px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  min-height: 90vh;
+}
+
+.borrower-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  display: block;
+  overflow-x: auto;
+}
+
+.borrower-container th, .borrower-container td {
+  text-align: left;
+  padding: 8px;
+}
+
+@media (max-width: 700px) {
+  .borrower-container {
+    max-width: 98vw;
+    padding: 8px;
+  }
+}
 
 

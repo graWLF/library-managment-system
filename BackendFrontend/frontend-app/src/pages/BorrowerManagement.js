@@ -100,7 +100,7 @@ function BorrowerManagement() {
             className="search-input"
           />
           {error && <p className="error">{error}</p>}
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-scroll">
           <table>
             <thead>
               <tr>
