@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { postBook } from '../api/Services'; 
+import { addIsbnAuthorid } from '../api/Services';  // Assuming the function is correctly imported
 import '../styles/AddBook.css';
-//import axios from 'axios';
+import { API_BASE_URL } from '../api/config';
+import { GOOGLE_API_KEY } from '../api/config'; 
 
 function AddBook() {
   const [message, setMessage] = useState('');
@@ -31,73 +33,105 @@ function AddBook() {
   const [color, setColor] = useState("");
   const [isbnSearch, setIsbnSearch] = useState("");
 
+  const [authors, setAuthors] = useState([]);
+  const [selectedAuthors, setSelectedAuthors] = useState([]); // State for multiple authors
    
-
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      const response = await fetch(`${API_BASE_URL}/author`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch authors");
+      }
+      const data = await response.json();
+      setAuthors(data); // Store authors in state
+    };
+    fetchAuthors().catch(error => setMessage(error.message));
+  }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const book = {
-        Id,
-        local_isbn,
-        type,
-        title,
-        category,
-        additiondate,
-        content,
-        infourl,
-        contentlanguage,
-        contentsource,
-        image,
-        price,
-        duration,
-        contentlink,
-        librarianid,
-        format,
-        publishingstatus,
-        releasedate,
-        publisherid,
-        pages,
-        weight,
-        dimensions,
-        material,
-        color
-      };
-       // Create the book object
-      await postBook(book); // Call the postBook method
-      setId('');
-      setLocalIsbn('');
-      setType('');
-      setTitle('');
-      setCategory('');
-      setAdditiondate('');
-      setContent('');
-      setInfourl('');
-      setContentlanguage('');
-      setContentsource('');
-      setImage('');
-      setPrice('');
-      setDuration('');
-      setContentlink('');
-      setLibrarianid('');
-      setFormat('');
-      setPublishingstatus('');
-      setReleasedate('');
-      setPublisherid('');
-      setPages('');
-      setWeight('');
-      setDimensions('');
-      setMaterial('');
-      setColor('');
-     
-    } catch (error) {
-      setMessage('Error: ' + error.message);
-    }
-  };
+  e.preventDefault();
+  
+  // Check if ISBN and Title are provided, if not show an error
+  if (!Id || !title) {
+    setMessage('ISBN and Title are required.');
+    return;
+  }
+
+  try {
+    // Set default values for the other fields if they are empty
+    const book = {
+      Id,
+      local_isbn: local_isbn || '0',  // Make sure ISBN is not empty
+      type: type || '0',
+      title: title,
+      category: category || '0',
+      additiondate: additiondate || '0',
+      content: content || '0',
+      infourl: infourl || '0',
+      contentlanguage: contentlanguage || '0',
+      contentsource: contentsource || '0',
+      image: image || '0',
+      price: price || '0',
+      duration: duration || '0',
+      contentlink: contentlink || '0',
+      librarianid: librarianid || '0',
+      format: format || '0',
+      publishingstatus: publishingstatus || '0',
+      releasedate: releasedate || '0',
+      publisherid: publisherid || '0',
+      pages: pages || '0',
+      weight: weight || '0',
+      dimensions: dimensions || '0',
+      material: material || '0',
+      color: color || '0',
+    };
+
+    // Post the book data
+    const bookResponse = await postBook(book);
+    setMessage('Book added successfully!');
+
+    // Now add the ISBN and author IDs to the database
+    const authorPromises = selectedAuthors.map(authorId => {
+      return addIsbnAuthorid(Id, authorId); // Assuming this function is defined in Services.jsx
+    });
+    await Promise.all(authorPromises);
+
+    // Reset form fields after success
+    setId('');
+    setLocalIsbn('');
+    setType('');
+    setTitle('');
+    setCategory('');
+    setAdditiondate('');
+    setContent('');
+    setInfourl('');
+    setContentlanguage('');
+    setContentsource('');
+    setImage('');
+    setPrice('');
+    setDuration('');
+    setContentlink('');
+    setLibrarianid('');
+    setFormat('');
+    setPublishingstatus('');
+    setReleasedate('');
+    setPublisherid('');
+    setPages('');
+    setWeight('');
+    setDimensions('');
+    setMaterial('');
+    setColor('');
+    setSelectedAuthors([]); // Reset selected authors
+
+  } catch (error) {
+    // setMessage('Error: ' + error.message);
+  }
+};
+
+
   const handleGoogleAdd = async () => {
     try {
-      const apiKey = "YOURGOOGLEBOOKAPI"; // Replace with your actual API key if needed
-      const response = await fetch(`http://localhost:5000/api/Book/${isbnSearch}/${apiKey}`);
+      const response = await fetch(`${API_BASE_URL}/Book/${isbnSearch}/${GOOGLE_API_KEY}`);
       const book = response.data;
 
       // Fill the form fields with the fetched book data
@@ -126,7 +160,7 @@ function AddBook() {
       setDimensions(book.dimensions);
       setMaterial(book.material);
       setColor(book.color);
-      // Set the message to indicate success
+      
       setMessage("Book data loaded from Google!");
     } catch (error) {
       setMessage("Book not found or error fetching from Google.");
@@ -136,9 +170,6 @@ function AddBook() {
   return (
     <div>
       <h2>Add Book</h2>
-      
-
-      
       <form onSubmit={handleSubmit}>
         <div className="form-grid">
           <div>
@@ -333,6 +364,24 @@ function AddBook() {
               value={color}
               onChange={(e) => setColor(e.target.value)}
             />
+          </div>
+
+          <div>
+            <label>Authors:</label>
+            <select
+              multiple
+              value={selectedAuthors}
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+                setSelectedAuthors(selectedOptions);
+              }}
+            >
+              {authors.map((author) => (
+                <option key={author.id} value={author.id}>
+                  {author.author}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <button type="submit">Add Book</button>

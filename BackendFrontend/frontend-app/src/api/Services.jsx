@@ -1,5 +1,5 @@
 // src/services/bookService.js
-import API_BASE_URL from "./config.js";
+import {API_BASE_URL} from "./config.js";
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -152,7 +152,10 @@ export const updateLibrarian = async (id, librarian) => {
     if (!response.ok) {
         throw new Error("Failed to update librarian");
     }
-    return response.json();
+    if (response.status !== 204) {
+        return response.json();
+    }
+    return;
 };
 export const deleteLibrarian = async (id) => {
     const response = await fetch(`${API_BASE_URL}/librarian/${id}`, {
@@ -161,6 +164,7 @@ export const deleteLibrarian = async (id) => {
     if (!response.ok) {
         throw new Error("Failed to delete librarian");
     }
+    return;
 };
 export const createLibrarian = async (librarian) => {
     const response = await fetch(`${API_BASE_URL}/librarian`, {
@@ -171,16 +175,154 @@ export const createLibrarian = async (librarian) => {
     if (!response.ok) {
         throw new Error("Failed to create librarian");
     }
-    return response.json();
+    const contentLength = response.headers.get("Content-Length");
+    if (contentLength && contentLength !== "0") {
+        return response.json();
+    }
+    return;
 };
-function ProtectedRoute({ children }) {
+
+export default function ProtectedRoute({ children }) {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   } return children;
 }
 
-export default ProtectedRoute;
+export const findAuthor = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book");
+    }
+    return response.json();
+};
 
-  
-  
+export const getAuthorById = async (authorId) => {
+  const response = await fetch(`${API_BASE_URL}/Author/${authorId}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch author ${authorId}`);
+  }
+  return response.json();
+};
+
+export const getPublisherById = async (publisherId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/publisher/${publisherId}`);
+    const data = await response.json();
+    return data;  // Should return an object with { publisherName: 'Some Publisher' }
+  } catch (error) {
+    console.error('Error fetching publisher:', error);
+    throw error;
+  }
+};
+
+export const fetchBookByGoogle = async (isbn, apiKey) => {
+    // 1. Fetch book data from Google via your backend
+    const response = await fetch(`${API_BASE_URL}/Book/${isbn}/${apiKey}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book from Google");
+    }
+    const bookData = await response.json();
+
+    // 2. Post the fetched book data to your database
+    //    (Assumes bookData is in the correct format for your postBook method)
+    const postResult = await postBook(bookData);
+
+    // 3. Return the result of the post operation
+    return postResult;
+};
+
+export const fetchAuthors = async () => {
+    const response = await fetch(`${API_BASE_URL}/author`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch authors");
+    }
+    return response.json();
+}
+
+export const addIsbnAuthorid = async (id, authorid) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, authorid }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add ISBN and Author ID");
+    }
+    return response.json();
+}
+export const deleteIsbnAuthorid = async (id, authorid) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${id}/${authorid}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete ISBN-AuthorID relation");
+    }
+    return;
+};
+export const deleteBookCopyByIsbn = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/BookCopy/isbn/${isbn}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book copies by ISBN");
+    }
+    return;
+};
+
+export const fetchBookByIsbn = async (isbn) => {
+    const response = await fetch(`${API_BASE_URL}/book/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book by ISBN");
+    }
+    return response.json();
+};
+
+export const updateBorrower = async (id, borrower) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrower),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update borrower");
+    }
+    return response.json();
+}
+export const fetchBorrowerById = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch borrower");
+    }
+    return response.json();
+}
+export const deleteBorrower = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrower/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete borrower");
+    }
+    return response.json();
+}
+export const updateBorrowing = async (id, borrowing) => {
+    const response = await fetch(`${API_BASE_URL}/borrowing/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrowing),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update borrowing");
+    }
+    return response.json();
+}
+export const deleteBorrowing = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/borrowing/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete borrowing");
+    }
+    return response.json();
+}
+

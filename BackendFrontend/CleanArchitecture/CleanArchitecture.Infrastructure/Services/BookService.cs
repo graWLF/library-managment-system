@@ -14,6 +14,10 @@ using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
 
 namespace CleanArchitecture.Infrastructure.Services
 {
@@ -22,6 +26,155 @@ namespace CleanArchitecture.Infrastructure.Services
         private readonly IBookRepository _repository;
         private readonly IMapper _mapper;
         private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly IWebHostEnvironment _env;
+        public async Task<string> ScanBarcodeBase64Async(string base64Image)
+        {
+            try
+            {
+                // Remove any data URI prefix (e.g., "data:image/png;base64,...")
+                var base64Data = base64Image.Contains(',')
+                    ? base64Image.Substring(base64Image.IndexOf(',') + 1)
+                    : base64Image;
+
+                // Decode the base64 string to byte array
+                var imageBytes = Convert.FromBase64String(base64Data);
+
+                // Create a temporary image file
+                var uploadsDir = Path.Combine(_env.ContentRootPath, "TempUploads");
+                Directory.CreateDirectory(uploadsDir);
+
+                var fileName = Guid.NewGuid().ToString() + ".jpg";
+                var imagePath = Path.Combine(uploadsDir, fileName);
+                await File.WriteAllBytesAsync(imagePath, imageBytes);
+
+                // Run BarcodeScanner.exe and pass image path
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = "BarcodeScanner.exe",
+                    Arguments = $"--image \"{imagePath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                string output;
+                string errors;
+
+                using (var process = new Process { StartInfo = processInfo })
+                {
+                    process.Start();
+
+                    output = await process.StandardOutput.ReadToEndAsync();
+                    errors = await process.StandardError.ReadToEndAsync();
+
+                    process.WaitForExit();
+                }
+
+                // Log both outputs
+                Console.WriteLine($"[STDOUT] {output}");
+                if (!string.IsNullOrWhiteSpace(errors))
+                {
+                    Console.WriteLine($"[STDERR] {errors}");
+                }
+
+                // Clean up temporary file
+                File.Delete(imagePath);
+
+                return output.Trim();
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Invalid base64 string: " + ex.Message);
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error running barcode scanner: " + ex.Message);
+                return string.Empty;
+            }
+        }
+        public async Task<string> ScanBarcodePathAsync(string imagePath)
+        {
+            try
+            {
+                // Execute BarcodeScanner.exe to process the image
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = "BarcodeScanner.exe",  // Path to your barcode scanning executable
+                    Arguments = $"--image {imagePath}",  // Pass the image file path as an argument
+                    RedirectStandardOutput = true,  // Capture the output
+                    UseShellExecute = false,  // Don't use the shell
+                    CreateNoWindow = true  // Don't show the command window
+                };
+                string output;
+                using (var process = new Process { StartInfo = processInfo })
+                {
+                    process.Start();
+                    // Capture the output from the BarcodeScanner.exe
+                    output = await process.StandardOutput.ReadToEndAsync();
+                    process.WaitForExit();
+                }
+                // Log the output from the barcode scanner
+                Console.WriteLine($"BarcodeScanner.exe output: {output}");
+                return output.Trim();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+                Console.WriteLine($"Error occurred: {ex.Message}");
+                return string.Empty;  // Optionally return an empty string if an error occurred
+            }
+        }
+        public async Task<string> ScanBarcodeAsync(IFormFile image)
+        {
+            try
+            {
+                var uploadsDir = Path.Combine(_env.ContentRootPath, "TempUploads");
+                Directory.CreateDirectory(uploadsDir); // Ensure directory is created
+                var filePath = Path.Combine(uploadsDir, Guid.NewGuid() + Path.GetExtension(image.FileName));
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                // Log success in saving file
+                Console.WriteLine($"File saved to: {filePath}");
+
+                // Execute BarcodeScanner.exe
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = "BarcodeScanner.exe",
+                    Arguments = $"--image \"{filePath}\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                string output;
+                using (var process = new Process { StartInfo = processInfo })
+                {
+                    process.Start();
+                    output = await process.StandardOutput.ReadToEndAsync();
+                    process.WaitForExit();
+                }
+
+                // Log the output from the process
+                Console.WriteLine($"BarcodeScanner.exe output: {output}");
+
+                // Optional: delete file after processing
+                File.Delete(filePath);
+
+                return output.Trim();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred: {ex.Message}");
+                return string.Empty;  // Optionally return empty if an error occurred
+            }
+        }
+
+
 
         private async Task<(string url, JObject item)> GetMainUrlAsync(string isbn, string apiKey)
         {
@@ -155,13 +308,14 @@ namespace CleanArchitecture.Infrastructure.Services
             return dto;
         }
 
-
-
-
-        public BookService(IBookRepository repository, IMapper mapper)
+        public BookService(
+            IBookRepository repository,
+            IMapper mapper,
+            IWebHostEnvironment env)
         {
             _repository = repository;
             _mapper = mapper;
+            _env = env;
         }
 
         public async Task<IEnumerable<BookDto>> GetAllAsync()

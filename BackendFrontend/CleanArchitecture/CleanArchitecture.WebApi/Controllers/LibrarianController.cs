@@ -42,14 +42,14 @@ namespace CleanArchitecture.WebApi.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] LibrarianDTO dto)
         {
             await _librarianService.UpdateAsync(id, dto);
-            return Ok();
+            return Ok(new { });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _librarianService.DeleteAsync(id);
-            return Ok();
+            return Ok(new { });
         }
     }
 }

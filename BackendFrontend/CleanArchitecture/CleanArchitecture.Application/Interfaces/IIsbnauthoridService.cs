@@ -14,5 +14,6 @@ namespace CleanArchitecture.Core.Interfaces
         Task CreateAsync(IsbnauthoridDTO dto);
         Task UpdateAsync(long Id, long authorid, IsbnauthoridDTO dto);
         Task DeleteAsync(long Id, long authorid);
+        Task<IEnumerable<IsbnauthoridDTO>> GetByISBNAsync(long Id);
     }
 }
