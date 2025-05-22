@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,11 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Image,
+  ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { searchBooks, searchBooksByIsbn } from '@/api/services';
+import { searchBooks, searchBooksByIsbn, fetchBooks } from '@/api/services'; // Assuming there's an API to get all books
 import BackButton from '../../components/BackButton';
 
 const SearchScreen = () => {
@@ -20,14 +22,36 @@ const SearchScreen = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Function to fetch all books
+  const fetchAllBooks = async () => {
+    setLoading(true);
+    try {
+      const books = await fetchBooks(); // Assuming there's an API to fetch all books
+      setResults(books);
+    } catch (error) {
+      console.error('❌ Fetch All Books Error:', error);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch all books when the component is mounted
+  useEffect(() => {
+    fetchAllBooks();
+  }, []);
+
   const isIsbn = (text: string) => {
-    // Remove dashes and spaces, and check if it's all digits and 10 or 13 characters
     const cleaned = text.replace(/[-\s]/g, '');
     return /^\d{10}(\d{3})?$/.test(cleaned);
   };
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      // If query is empty, fetch all books
+      fetchAllBooks();
+      return;
+    }
 
     setLoading(true);
     try {
@@ -36,7 +60,6 @@ const SearchScreen = () => {
         ? await searchBooksByIsbn(trimmedQuery)
         : await searchBooks(trimmedQuery);
 
-      // Normalize result to array for FlatList
       const resultsArray = Array.isArray(books) ? books : [books];
       setResults(resultsArray);
     } catch (error) {
@@ -47,16 +70,34 @@ const SearchScreen = () => {
     }
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => router.push(`../book/${item.id}`)}
-    >
-      <Text style={styles.bookTitle}>{item.title}</Text>
-      <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
-      <Text style={styles.bookInfo}>Category: {item.category}</Text>
-    </TouchableOpacity>
-  );
+
+  const renderItem = ({ item }: { item: any }) => {
+    const imageUrl =
+      item.image && item.image.startsWith('http')
+        ? item.image
+        : 'https://via.placeholder.com/100x150.png?text=No+Image';
+
+    return (
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => router.push(`../book/${item.id}`)}
+      >
+        <View style={styles.row}>
+          <Image
+            source={{ uri: imageUrl }}
+            style={styles.bookImage}
+            resizeMode="cover"
+            onError={() => console.log('❌ Failed to load image:', imageUrl)}
+          />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Text style={styles.bookTitle}>{item.title}</Text>
+            <Text style={styles.bookInfo}>ISBN: {item.id}</Text>
+            <Text style={styles.bookInfo}>Category: {item.category}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -85,12 +126,17 @@ const SearchScreen = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#6a0dad" style={{ marginTop: 30 }} />
       ) : (
-        <FlatList
-          data={results}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id?.toString() || item.isbn}
+        <ScrollView
+          style={styles.resultsContainer}
           contentContainerStyle={styles.listContent}
-        />
+          keyboardShouldPersistTaps="handled"
+        >
+          <FlatList
+            data={results}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id?.toString() || item.isbn}
+          />
+        </ScrollView>
       )}
     </KeyboardAvoidingView>
   );
@@ -104,7 +150,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   centerContent: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 18,
@@ -157,6 +202,20 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 80,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bookImage: {
+    width: 60,
+    height: 90,
+    borderRadius: 4,
+    backgroundColor: '#444',
+  },
+  resultsContainer: {
+    flex: 1,
+    marginTop: 20, // Ensure the results start below the input box
   },
 });
 

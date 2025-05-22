@@ -12,6 +12,7 @@ import {
 import { useRouter } from 'expo-router';
 import { loginUser } from '@/api/services';
 import BackButton from '../components/BackButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const LoginScreen = () => {
     const newErrors: { username?: string; password?: string } = {};
 
     if (!username.trim()) {
-      newErrors.username = 'Username or email is required.';
+      newErrors.username = 'Username is required.';
     }
 
     if (!password.trim()) {
@@ -51,18 +52,34 @@ const LoginScreen = () => {
       console.log('Login response received:', result);
 
       if (result === 'Login successful.') {
+        await AsyncStorage.setItem('user', JSON.stringify({ username }));
         console.log('navigating to /search...');
         router.replace('/(tabs)/search');
       } else {
-        Alert.alert('Error', 'Invalid username or password.');
+        Alert.alert(
+          'Login Failed',
+          'The username or password you entered is incorrect. Please try again.',
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
       }
     } catch (error: any) {
       if (error.response) {
         console.error('❌ Login Error (Backend):', error.response.data);
-        Alert.alert('Error', error.response.data.message || 'Invalid credentials.');
+        Alert.alert(
+          'Login Error',
+          error.response.data.message || 'Invalid credentials.',
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
       } else {
         console.error('❌ Login Error (Network):', error.message);
-        Alert.alert('Error', 'Network error. Please try again.');
+        Alert.alert(
+          'Network Error',
+          'Network error. Please check your internet connection and try again.',
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
       }
     }
   };
@@ -78,7 +95,7 @@ const LoginScreen = () => {
       <View style={styles.form}>
         <TextInput
           style={[styles.input, errors.username && styles.inputError]}
-          placeholder="Username or Email"
+          placeholder="Username"
           placeholderTextColor="#888"
           autoCapitalize="none"
           onChangeText={setUsername}

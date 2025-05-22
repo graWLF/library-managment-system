@@ -1,7 +1,29 @@
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function TabLayout() {
+export default function ProtectedTabsLayout() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const user = await AsyncStorage.getItem('user');
+      if (user) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+        router.replace('/welcome'); // login yoksa welcome'a gönder
+      }
+      setIsLoading(false);
+    };
+
+    checkLogin();
+  }, []);
+
+  if (isLoading || !authenticated) return null;
+
   return (
     <Tabs
       screenOptions={{
@@ -16,6 +38,7 @@ export default function TabLayout() {
         },
       }}
     >
+      {/* Görünecek sekmeler */}
       <Tabs.Screen
         name="BookEdit"
         options={{
@@ -41,6 +64,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
+        }}
+      />
+
+      {/* TabBar'da görünmeyecek ekranlar */}
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="BarcodeScanner"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

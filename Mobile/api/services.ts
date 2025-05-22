@@ -153,8 +153,96 @@ export const updateBook = async (isbn: string, bookData: any) => {
   return response.data;
 };
 
+export const findAuthor = async (isbn: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${isbn}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch book");
+    }
+    return response.json();
+};
 
-export const deleteBook = async (isbn: number) => {
-  const response = await axios.delete(`${API_BASE_URL}/Book/${isbn}`);
-  return response.data;
+export const getAuthorById = async (authorId: string | number) => {
+  const response = await fetch(`${API_BASE_URL}/Author/${authorId}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch author ${authorId}`);
+  }
+  return response.json();
+};
+
+export const fetchLibrarianById = async (id: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/librarian/${id}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch librarian");
+    }
+    return response.json();
+}
+
+export const getPublisherById = async (publisherId: string | number) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/publisher/${publisherId}`);
+    const data = await response.json();
+    return data;  // Should return an object with { publisherName: 'Some Publisher' }
+  } catch (error) {
+    console.error('Error fetching publisher:', error);
+    throw error;
+  }
+};
+export const getLoginInfo = async (username: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Registration/userInfo/${username}`);
+    const data = await response.json();
+    return data;  // Should return an object with { username: 'Some User' }
+  } catch (error) {
+    console.error('Error fetching login info:', error);
+    throw error;
+  }
+};
+
+export const fetchAuthors = async () => {
+    const response = await fetch(`${API_BASE_URL}/author`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch authors");
+    }
+    return response.json();
+}
+
+export const addIsbnAuthorid = async (id : string | number , authorid : string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, authorid }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add ISBN and Author ID");
+    }
+    return response.json();
+}
+
+export const deleteIsbnAuthorid = async (id : string | number , authorid : string | number) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${id}/${authorid}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete ISBN-AuthorID relation");
+    }
+    return;
+};
+export const deleteBookCopyByIsbn = async (isbn: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/BookCopy/isbn/${isbn}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book copies by ISBN");
+    }
+    return;
+};
+
+export const deleteBook = async (id: string | number) => {
+    const response = await fetch(`${API_BASE_URL}/book/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book");
+    }
+    return;
 };
