@@ -251,3 +251,21 @@ export const addIsbnAuthorid = async (id, authorid) => {
     }
     return response.json();
 }
+export const deleteIsbnAuthorid = async (id, authorid) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid/${id}/${authorid}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete ISBN-AuthorID relation");
+    }
+    return;
+};
+export const deleteBookCopy = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/BookCopy/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete book copy");
+    }
+    return;
+};

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook } from '../api/Services';
-
+import { fetchBooks, fetchBookByName, findAuthor, getAuthorById, fetchLibrarianById, getPublisherById, deleteBook, deleteIsbnAuthorid, deleteBookCopy } from '../api/Services';
 import '../styles/Search.css';
 import { Link } from 'react-router-dom';
 
@@ -11,48 +10,53 @@ function Search() {
   const [error, setError] = useState(null);
   const [authors, setAuthors] = useState([]);
   const [librarianName, setLibrarianName] = useState('');
-  const [publisherName, setPublisherName] = useState(''); // State for publisher name
+  const [publisherName, setPublisherName] = useState('');
 
   useEffect(() => {
-  const fetchAuthorsAndLibrarian = async () => {
-    if (!selectedBook) {
-      setAuthors([]);
-      setLibrarianName('');
-      setPublisherName('');
-      return;
-    }
-
-    try {
-      // Fetch authors
-      const authorIds = await findAuthor(selectedBook.id);
-      const authorPromises = authorIds.map((a) => getAuthorById(a.authorId));
-      const authorDetails = await Promise.all(authorPromises);
-      setAuthors(authorDetails);
-
-      // Fetch librarian
-      if (selectedBook.librarianId) {
-        const librarian = await fetchLibrarianById(selectedBook.librarianId);
-        setLibrarianName(librarian.librarianName);
-      } else {
-        setLibrarianName('Unknown');
+    const fetchAuthorsAndLibrarian = async () => {
+      if (!selectedBook) {
+        setAuthors([]);
+        setLibrarianName('');
+        setPublisherName('');
+        return;
       }
-      // Fetch publisher name
-      if (selectedBook.publisherId) {
-        const publisher = await getPublisherById(selectedBook.publisherId); // Assuming this function fetches publisher details
-        setPublisherName(publisher.publisher); // Assuming the publisher name is in the same format
-      } else {
-        setPublisherName('Unknown');
-      }
-    } catch (error) {
-      console.error("Failed to fetch authors, librarian, or publisher", error);
-      setAuthors([]);
-      setLibrarianName('Unavailable');
-      setPublisherName('Unavailable');
-    }
-  };
 
-  fetchAuthorsAndLibrarian();
-}, [selectedBook]);
+      try {
+        // Fetch author relations (with authorId)
+        const authorRelations = await findAuthor(selectedBook.id); // [{authorId: 1}, ...]
+        // Fetch author details and keep authorId
+        const authorDetails = await Promise.all(
+          authorRelations.map(async (rel) => {
+            const author = await getAuthorById(rel.authorId);
+            return { ...author, authorId: rel.authorId }; // keep authorId
+          })
+        );
+        setAuthors(authorDetails);
+
+        // Fetch librarian
+        if (selectedBook.librarianId) {
+          const librarian = await fetchLibrarianById(selectedBook.librarianId);
+          setLibrarianName(librarian.librarianName);
+        } else {
+          setLibrarianName('Unknown');
+        }
+        // Fetch publisher name
+        if (selectedBook.publisherId) {
+          const publisher = await getPublisherById(selectedBook.publisherId);
+          setPublisherName(publisher.publisher);
+        } else {
+          setPublisherName('Unknown');
+        }
+      } catch (error) {
+        console.error("Failed to fetch authors, librarian, or publisher", error);
+        setAuthors([]);
+        setLibrarianName('Unavailable');
+        setPublisherName('Unavailable');
+      }
+    };
+
+    fetchAuthorsAndLibrarian();
+  }, [selectedBook]);
 
   useEffect(() => {
     const loadAllBooks = async () => {
@@ -68,50 +72,53 @@ function Search() {
     loadAllBooks();
   }, []);
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
 
-const handleSearch = async (e) => {
-  e.preventDefault();
+    try {
+      if (bookName.trim() === '') {
+        const allBooks = await fetchBooks();
+        setBooks(allBooks);
+        setError(null);
+        setSelectedBook(null);
+        return;
+      }
 
-  try {
-    if (bookName.trim() === '') {
-      const allBooks = await fetchBooks();
-      setBooks(allBooks);
-      setError(null);
-      setSelectedBook(null);
-      return;
-    }
-
-    const results = await fetchBookByName(bookName);
-    if (results.length === 0) {
-      setError('No books found.');
+      const results = await fetchBookByName(bookName);
+      if (results.length === 0) {
+        setError('No books found.');
+        setBooks([]);
+        setSelectedBook(null);
+      } else {
+        setBooks(results);
+        setError(null);
+        setSelectedBook(null);
+      }
+    } catch (err) {
+      console.error('Error during search:', err);
       setBooks([]);
       setSelectedBook(null);
-    } else {
-      setBooks(results);
-      setError(null);
-      setSelectedBook(null);
+      setError('Failed to fetch books. Please try again.');
     }
-  } catch (err) {
-    console.error('Error during search:', err);
-    setBooks([]);
-    setSelectedBook(null);
-    setError('Failed to fetch books. Please try again.');
-  }
-};
+  };
 
-const handleDelete = async () => {
-  if (window.confirm('Are you sure you want to delete this book?')) {
-    try {
-      await deleteBook(selectedBook.id);
-      setSelectedBook(null);
-      setBooks(books.filter(b => b.id !== selectedBook.id));
-      alert('Book deleted successfully!');
-    } catch (err) {
-      alert('Failed to delete book.');
+  // Delete all author relations, then delete the book
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      try {
+        for (const a of authors) {
+          await deleteIsbnAuthorid(selectedBook.id, a.authorId);
+        }
+        await deleteBookCopy(selectedBook.id);
+        await deleteBook(selectedBook.id);
+        setSelectedBook(null);
+        setBooks(books.filter(b => b.id !== selectedBook.id));
+        alert('Book deleted successfully!');
+      } catch (err) {
+        alert('Failed to delete book.');
+      }
     }
-  }
-};
-
+  };
 
   return (
     <div className="search-page">
@@ -258,22 +265,21 @@ const handleDelete = async () => {
             </tbody>
           </table>
           <Link to={`/admin/edit-book/${selectedBook.id}`}>
-          <button title="Edit">
-                  <span role="img" aria-label="edit">✏️</span>
-          </button>
+            <button title="Edit">
+              <span role="img" aria-label="edit">✏️</span>
+            </button>
           </Link>
           <br />
           <button
-  onClick={handleDelete}
-  className="delete-button"
-  style={{ background: '#e74c3c', color: 'white', marginTop: 8 }}
->
-  <span role="img" aria-label="delete">🗑️</span> Delete
-</button>
-<button onClick={() => setSelectedBook(null)} className="back-button" style={{ marginTop: 8 }}>
-  ← Back to list
-</button>
-          
+            onClick={handleDelete}
+            className="delete-button"
+            style={{ background: '#e74c3c', color: 'white', marginTop: 8 }}
+          >
+            <span role="img" aria-label="delete">🗑️</span> Delete
+          </button>
+          <button onClick={() => setSelectedBook(null)} className="back-button" style={{ marginTop: 8 }}>
+            ← Back to list
+          </button>
         </div>
       )}
     </div>
