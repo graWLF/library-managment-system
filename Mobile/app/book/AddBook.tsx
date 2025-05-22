@@ -7,151 +7,113 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
-  Platform,
 } from 'react-native';
-import { addBook, fetchAndAddBookByISBN } from '@/api/services';
-import WebBarcodeScanner from '@/components/WebBarcodeScanner'; 
-
+import { addBook } from '@/api/services';
 
 const AddBookScreen = () => {
-  const [selectedMethod, setSelectedMethod] = useState<'manual' | 'isbn' | 'barcode' | null>(null);
+  const [id, setId] = useState('');
+  const [localIsbn, setLocalIsbn] = useState('');
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
   const [type, setType] = useState('');
-  const [pages, setPages] = useState('');
+  const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
-  const [isbnInput, setIsbnInput] = useState('');
+  const [additionDate, setAdditionDate] = useState('');
+  const [infoUrl, setInfoUrl] = useState('');
+  const [image, setImage] = useState('');
+  const [format, setFormat] = useState('');
+  const [releaseDate, setReleaseDate] = useState('');
+  const [publisherId, setPublisherId] = useState('');
+  const [pages, setPages] = useState('');
 
-  const handleManualSubmit = async () => {
-    if (!title || !category || !type || !pages || !content) {
-      Alert.alert('Please fill all fields');
+  const handleSubmit = async () => {
+    if (!id || !localIsbn || !title) {
+      Alert.alert('Please fill in ID (ISBN), Local ISBN, and Title');
       return;
     }
 
     const newBook = {
-      id: Math.floor(Math.random() * 10000000000),
+      id: parseInt(id),
+      local_isbn: localIsbn,
       title,
-      category,
       type,
-      pages: parseInt(pages),
-      format: 'Paperback',
-      releaseDate: new Date().toISOString().split('T')[0],
-      publisherId: 1,
+      category,
       content,
+      additionDate,
+      infoUrl,
+      image,
+      format,
+      releaseDate,
+      publisherId: publisherId ? parseInt(publisherId) : undefined,
+      pages: pages ? parseInt(pages) : 0,
     };
 
     try {
       await addBook(newBook);
       Alert.alert('✅ Book added successfully');
+
+      // Reset fields
+      setId('');
+      setLocalIsbn('');
       setTitle('');
-      setCategory('');
       setType('');
-      setPages('');
+      setCategory('');
       setContent('');
+      setAdditionDate('');
+      setInfoUrl('');
+      setImage('');
+      setFormat('');
+      setReleaseDate('');
+      setPublisherId('');
+      setPages('');
     } catch (err) {
       console.error(err);
       Alert.alert('❌ Error adding book');
     }
   };
 
-  const handleIsbnSubmit = async (isbn?: string) => {
-    const code = isbn || isbnInput.trim();
-    if (!code) {
-      Alert.alert('Please enter an ISBN');
-      return;
-    }
-
-    try {
-      const added = await fetchAndAddBookByISBN(code);
-      console.log('✅ Book added:', added);
-      Alert.alert('✅ Book added successfully');
-      setIsbnInput('');
-    } catch (error) {
-      console.error('❌ ISBN Error:', error);
-      Alert.alert('❌ Failed to fetch/add book');
-    }
-  };
-
-  const renderForm = () => {
-    switch (selectedMethod) {
-      case 'manual':
-        return (
-          <ScrollView style={styles.formContainer}>
-            <Text style={styles.label}>Title</Text>
-            <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Enter title" placeholderTextColor="#aaa" />
-
-            <Text style={styles.label}>Category</Text>
-            <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Enter category" placeholderTextColor="#aaa" />
-
-            <Text style={styles.label}>Type</Text>
-            <TextInput style={styles.input} value={type} onChangeText={setType} placeholder="Enter type" placeholderTextColor="#aaa" />
-
-            <Text style={styles.label}>Pages</Text>
-            <TextInput style={styles.input} value={pages} onChangeText={setPages} placeholder="Enter number of pages" placeholderTextColor="#aaa" keyboardType="numeric" />
-
-            <Text style={styles.label}>Description</Text>
-            <TextInput style={[styles.input, { height: 100, textAlignVertical: 'top' }]} multiline value={content} onChangeText={setContent} placeholder="Enter description" placeholderTextColor="#aaa" />
-
-            <TouchableOpacity style={styles.button} onPress={handleManualSubmit}>
-              <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        );
-
-      case 'isbn':
-        return (
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Enter ISBN</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="ISBN"
-              value={isbnInput}
-              onChangeText={setIsbnInput}
-              keyboardType="numeric"
-              placeholderTextColor="#aaa"
-            />
-            <TouchableOpacity style={styles.button} onPress={() => handleIsbnSubmit()}>
-              <Text style={styles.buttonText}>Fetch & Add Book</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      /*  
-      case 'barcode':
-        return (
-          <View style={styles.formContainer}>
-            <WebBarcodeScanner onDetected={(code) => handleIsbnSubmit(code)} />
-          </View>
-        );
-      */
-      default:
-        return <Text style={styles.info}>Choose a method to add a book</Text>;
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Add a Book</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Add Book</Text>
 
-      <View style={styles.methodSelector}>
-        <TouchableOpacity style={styles.button} onPress={() => setSelectedMethod('manual')}>
-          <Text style={styles.buttonText}>Manual Entry</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => setSelectedMethod('isbn')}>
-          <Text style={styles.buttonText}>Add by ISBN</Text>
-        </TouchableOpacity>
-      </View>
+      {[
+        { label: 'ID (ISBN)*', value: id, setter: setId },
+        { label: 'Local ISBN*', value: localIsbn, setter: setLocalIsbn },
+        { label: 'Title*', value: title, setter: setTitle },
+        { label: 'Type', value: type, setter: setType },
+        { label: 'Category', value: category, setter: setCategory },
+        { label: 'Content / Description', value: content, setter: setContent },
+        { label: 'Addition Date', value: additionDate, setter: setAdditionDate },
+        { label: 'Info URL', value: infoUrl, setter: setInfoUrl },
+        { label: 'Image URL', value: image, setter: setImage },
+        { label: 'Format', value: format, setter: setFormat },
+        { label: 'Release Date', value: releaseDate, setter: setReleaseDate },
+        { label: 'Publisher ID', value: publisherId, setter: setPublisherId },
+        { label: 'Pages', value: pages, setter: setPages },
+      ].map((field, index) => (
+        <View key={index}>
+          <Text style={styles.label}>{field.label}</Text>
+          <TextInput
+            style={styles.input}
+            value={field.value}
+            onChangeText={field.setter}
+            placeholder={`Enter ${field.label.replace('*', '')}`}
+            placeholderTextColor="#aaa"
+          />
+        </View>
+      ))}
 
-      {renderForm()}
-    </View>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#181818',
-    paddingHorizontal: 24,
-    paddingTop: 60,
+    padding: 20,
+    flex: 1,
   },
   header: {
     fontSize: 24,
@@ -159,26 +121,6 @@ const styles = StyleSheet.create({
     color: '#B266FF',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  methodSelector: {
-    flexDirection: 'column',
-    gap: 12,
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#6a0dad',
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  formContainer: {
-    marginTop: 10,
   },
   label: {
     color: '#ccc',
@@ -191,16 +133,23 @@ const styles = StyleSheet.create({
     borderWidth: 1.2,
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingVertical: 10,
     fontSize: 16,
     color: '#fff',
     marginBottom: 12,
   },
-  info: {
-    color: '#ccc',
+  button: {
+    backgroundColor: '#6a0dad',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: '#fff',
     fontSize: 16,
-    textAlign: 'center',
-    marginTop: 20,
+    fontWeight: '700',
   },
 });
 
