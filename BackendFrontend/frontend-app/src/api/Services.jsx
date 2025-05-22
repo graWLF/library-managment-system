@@ -231,3 +231,23 @@ export const fetchBookByGoogle = async (isbn, apiKey) => {
     // 3. Return the result of the post operation
     return postResult;
 };
+
+export const fetchAuthors = async () => {
+    const response = await fetch(`${API_BASE_URL}/author`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch authors");
+    }
+    return response.json();
+}
+
+export const addIsbnAuthorid = async (id, authorid) => {
+    const response = await fetch(`${API_BASE_URL}/Isbnauthorid`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, authorid }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to add ISBN and Author ID");
+    }
+    return response.json();
+}
